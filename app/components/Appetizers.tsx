@@ -1,67 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
+"use client";
+import { useEffect, useState } from "react";
 
-const appetizers = [
-  {
-    _id: "1",
-    name: "Finger Food",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1541014741259-de529411b96a?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar",
-  },
-  {
-    _id: "2",
-    name: "Cranberry Brie Bites",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a318?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar",
-  },
-  {
-    _id: "3",
-    name: "Sunshine Stackers",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar",
-  },
-  {
-    _id: "4",
-    name: "Brie Crostini Appetizer",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1544025162-d76594f0c9c4?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar",
-  },
-  {
-    _id: "5",
-    name: "Sunshine Stackers",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar",
-  },
-  {
-    _id: "6",
-    name: "Grilled Chicken",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar",
-  },
-];
+type Dish = {
+  id: string;
+  name: string;
+  price: string;
+  image_url: string;
+  description: string;
+};
 
 export default function AppetizersSection() {
+  const [dishes, setDishes] = useState<Dish[]>([]);
+
+  useEffect(() => {
+    fetch("/api/dishes?category_id=1")
+      .then((res) => res.json())
+      .then(setDishes);
+  }, []);
+
   return (
     <section className="py-10">
       <h2 className="text-white text-2xl font-bold mb-8">Appetizers</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {appetizers.map((food) => (
-          <div key={food._id} className="bg-white rounded-[32px] p-4 shadow-xl">
-            <div className="relative h-48 w-full rounded-[24px] overflow-hidden mb-4">
+        {dishes.map((food) => (
+          <div key={food.id} className="bg-white rounded-4xl p-4 shadow-xl">
+            <div className="relative h-48 w-full rounded-3xl overflow-hidden mb-4">
               <img
-                src={food.img}
+                src={food.image_url}
                 alt={food.name}
                 className="w-full h-full object-cover"
               />

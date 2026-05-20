@@ -1,3 +1,5 @@
+"use client";
+
 export const dynamic = "force-dynamic";
 
 import Appetizers from "./components/Appetizers";
@@ -10,7 +12,6 @@ import LunchFavorites from "./components/LunchFavorites";
 import LunchSalads from "./components/LunchSalads";
 import Salads from "./components/Salads";
 
-// app/page.tsx
 export default function Home() {
   return (
     <main className="bg-[#333333] min-h-screen">

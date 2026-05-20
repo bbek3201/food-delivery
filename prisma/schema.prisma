@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model categories {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  dishes     dishes[]
+}
+
+model dishes {
+  id               String             @id @default(cuid())
+  name             String             @db.VarChar(100)
+  description      String?
+  price            Decimal?           @db.Decimal(10, 2)
+  image_url        String?
+  category_id      Int?
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  categories       categories?        @relation(fields: [category_id], references: [id], onUpdate: NoAction)
+  food_order_items food_order_items[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id          String        @id
+  email       String        @unique @db.VarChar(100)
+  password    String        @db.VarChar(100)
+  phone       String?       @db.VarChar(20)
+  address     String?
+  role        String?       @default("USER") @db.VarChar(10)
+  is_verified Boolean?      @default(false)
+  created_at  DateTime?     @default(now()) @db.Timestamp(6)
+  food_orders food_orders[]
+}
+
+model food_order_items {
+  id          String       @id
+  order_id    String?
+  dish_id     String?
+  quantity    Int
+  price       Decimal?     @db.Decimal(10, 2)
+  dishes      dishes?      @relation(fields: [dish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  food_orders food_orders? @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model food_orders {
+  id               String             @id
+  user_id          String?
+  total_price      Decimal?           @db.Decimal(10, 2)
+  status           String?            @default("PENDING") @db.VarChar(20)
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  food_order_items food_order_items[]
+  users            users?             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}

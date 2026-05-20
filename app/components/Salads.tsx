@@ -1,42 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
+import { useEffect, useState } from "react";
 
-const saladFoods = [
-  {
-    _id: "1",
-    name: "Grilled Chicken Cobb Salad",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
-  },
-  {
-    _id: "2",
-    name: "Burrata Caprese",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
-  },
-  {
-    _id: "3",
-    name: "Beetroot and Orange Salad",
-    price: "12.99",
-    img: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400",
-    description:
-      "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
-  },
-];
+type Dish = {
+  id: string;
+  name: string;
+  price: string;
+  image_url: string;
+  description: string;
+};
 
 export default function Salads() {
+  const [dishes, setDishes] = useState<Dish[]>([]);
+
+  useEffect(() => {
+    fetch("/api/dishes?category_id=4")
+      .then((res) => res.json())
+      .then(setDishes);
+  }, []);
+
   return (
-    <div className="py-10">
+    <section className="py-10">
       <h2 className="text-white text-2xl font-bold mb-8">Salads</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {saladFoods.map((food) => (
-          <div key={food._id} className="bg-white rounded-[32px] p-4 shadow-xl">
-            <div className="relative h-48 w-full rounded-[24px] overflow-hidden mb-4">
+        {dishes.map((food) => (
+          <div key={food.id} className="bg-white rounded-4xl p-4 shadow-xl">
+            <div className="relative h-48 w-full rounded-3xl overflow-hidden mb-4">
               <img
-                src={food.img}
+                src={food.image_url}
                 alt={food.name}
                 className="w-full h-full object-cover"
               />
@@ -60,6 +51,6 @@ export default function Salads() {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

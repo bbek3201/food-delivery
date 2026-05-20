@@ -1,16 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function SignUpPage() {
+export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async () => {
     setLoading(true);
-    const res = await fetch("/api/auth/sign-up", {
+    setError("");
+    const res = await fetch("/api/auth/sign-in", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -21,9 +25,9 @@ export default function SignUpPage() {
     if (res.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      router.push("/sign-in");
+      router.push("/"); // бүртгэлтэй → нүүр хуудас
     } else {
-      alert(data.error || "Алдаа гарлаа");
+      setError(data.error); // бүртгэлгүй → алдаа харуулна
     }
   };
 
@@ -36,10 +40,8 @@ export default function SignUpPage() {
         >
           ‹
         </button>
-        <h1 className="text-3xl font-bold mb-2">Create your account</h1>
-        <p className="text-gray-500 mb-8">
-          Sign up to explore your favorite dishes.
-        </p>
+        <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
+        <p className="text-gray-500 mb-8">Sign in to your account.</p>
 
         <input
           type="email"
@@ -48,13 +50,28 @@ export default function SignUpPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="border rounded-lg px-4 py-3 mb-4 w-full outline-none"
         />
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded-lg px-4 py-3 mb-6 w-full outline-none"
-        />
+
+        <div className="relative mb-2">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border rounded-lg px-4 py-3 w-full outline-none"
+          />
+        </div>
+
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
+        <label className="flex items-center gap-2 text-sm text-gray-500 mb-6 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={(e) => setShowPassword(e.target.checked)}
+            className="w-4 h-4"
+          />
+          Show password
+        </label>
 
         <button
           onClick={handleSubmit}
@@ -66,15 +83,15 @@ export default function SignUpPage() {
 
         <p className="text-center mt-6 text-gray-500">
           Already have an account?{" "}
-          <a href="/sign-in" className="text-blue-500 font-medium">
-            Log in
+          <a href="/sign-up" className="text-blue-500 font-medium">
+            Sign up
           </a>
         </p>
       </div>
 
       <div className="w-1/2 h-full">
         <img
-          src="food-delivery.png"
+          src="/food-delivery.png"
           alt="delivery"
           className="w-full h-full object-cover"
         />
