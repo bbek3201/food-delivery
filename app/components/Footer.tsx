@@ -1,92 +1,118 @@
 /* eslint-disable @next/next/no-img-element */
-import { FaFacebook, FaInstagram } from "react-icons/fa";
+"use client";
+import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white w-full">
+    <footer className="w-full">
+      {/* 1. Дээд талын утас болон Сошиал хэсэг */}
+      <div className="bg-[#2A1C0F] text-white py-6 px-10 flex flex-wrap justify-between items-center gap-6">
+        <div className="flex items-center gap-4">
+          <span className="text-sm uppercase tracking-widest text-gray-400">
+            Захиалга авах утас:
+          </span>
+          <span className="text-2xl font-black italic">7000-1234</span>
+        </div>
+        <div className="flex gap-6">
+          <span className="text-sm">Сошиал хаягууд:</span>
+          <div className="flex gap-4">
+            <FaFacebook className="w-6 h-6 hover:text-[#8B5E34] cursor-pointer" />
+            <FaInstagram className="w-6 h-6 hover:text-[#8B5E34] cursor-pointer" />
+            <FaTwitter className="w-6 h-6 hover:text-[#8B5E34] cursor-pointer" />
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <img src="/app-store.png" alt="App Store" className="h-10" />
+          <img src="/google-play.png" alt="Google Play" className="h-10" />
+        </div>
+      </div>
 
-      <div className="bg-[#E74C3C] py-6 overflow-hidden whitespace-nowrap">
-  <div
-    className="flex gap-10 w-max"
-    style={{
-      animation: "marquee 12s linear infinite",
-    }}
-  >
-    {[...Array(16)].map((_, i) => (
-      <span key={i} className="text-3xl font-bold uppercase italic text-white">
-        Fresh fast delivered 
-      </span>
-    ))}
-  </div>
-
-  <style>{`
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-  `}</style>
-</div>
-
-
-      <div className="max-w-7xl mx-auto px-10 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          
-
+      {/* 2. Үндсэн Footer хэсэг */}
+      <div className="bg-[#FDF9F3] text-[#2A1C0F] px-10 py-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+          {/* Logo хэсэг */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 flex-col">
-            
-               <img src="header.png" alt="NomNom" />
-              <img src="Text Container.svg" alt="" />
-             
-            </div>
+            <h2 className="text-3xl font-black italic text-[#8B5E34]">
+              МОНГОЛ ХООЛ
+            </h2>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              Монголын уламжлалт зоогийг орчин үеийн үйлчилгээтэй хослуулан
+              хүргэж байна.
+            </p>
           </div>
 
-
+          {/* Цэс */}
           <div className="space-y-4">
-            <h3 className="text-gray-500 font-bold uppercase tracking-widest text-sm">Nomnom</h3>
-            <ul className="space-y-3 text-lg">
-              <li><a href="#" className="hover:text-[#E74C3C]">Home</a></li>
-              <li><a href="#" className="hover:text-[#E74C3C]">Contact us</a></li>
-              <li><a href="#" className="hover:text-[#E74C3C]">Delivery zone</a></li>
+            <h3 className="font-bold uppercase tracking-widest text-sm text-[#8B5E34]">
+              Цэс
+            </h3>
+            <ul className="space-y-3 font-semibold">
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Халуун хоол
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Шөл
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Хүйтэн хоол
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Ундаа
+                </a>
+              </li>
             </ul>
           </div>
 
+          {/* Тусламж */}
           <div className="space-y-4">
-            <h3 className="text-gray-500 font-bold uppercase tracking-widest text-sm">Menu</h3>
-            <div className="grid grid-cols-2 gap-x-10 gap-y-3 text-lg">
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-[#E74C3C]">Appetizers</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Salads</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Pizzas</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Main dishes</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Desserts</a></li>
-              </ul>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-[#E74C3C]">Side dish</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Brunch</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Desserts</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Beverages</a></li>
-                <li><a href="#" className="hover:text-[#E74C3C]">Fish & Sea foods</a></li>
-              </ul>
-            </div>
+            <h3 className="font-bold uppercase tracking-widest text-sm text-[#8B5E34]">
+              Тусламж
+            </h3>
+            <ul className="space-y-3 font-semibold">
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Хүргэлт, төлбөр
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Түгээмэл асуулт
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Нууцлалын бодлого
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-[#8B5E34]">
+                  Үйлчилгээний нөхцөл
+                </a>
+              </li>
+            </ul>
           </div>
 
+          {/* Холбоо барих */}
           <div className="space-y-4">
-            <h3 className="text-gray-500 font-bold uppercase tracking-widest text-sm">Follow us</h3>
-            <div className="flex gap-4">
-              <FaFacebook className="w-8 h-8 cursor-pointer hover:text-[#E74C3C]" />
-              <FaInstagram className="w-8 h-8 cursor-pointer hover:text-[#E74C3C]" />
-            </div>
+            <h3 className="font-bold uppercase tracking-widest text-sm text-[#8B5E34]">
+              Холбоо барих
+            </h3>
+            <p className="text-sm">Утас: 7000-1234</p>
+            <p className="text-sm">И-мэйл: info@mongolhool.mn</p>
+            <p className="text-sm">Хаяг: УБ хот, Сүхбаатар дүүрэг</p>
           </div>
         </div>
 
-        <div className="mt-20 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between text-gray-500 text-sm gap-4">
-          <p>Copy right 2024 © Nomnom LLC</p>
-          <div className="flex gap-8">
-            <a href="#" className="hover:text-white">Privacy policy</a>
-            <a href="#" className="hover:text-white">Terms and condition</a>
-            <a href="#" className="hover:text-white">Cookie policy</a>
-          </div>
+        {/* Доод талын copyright */}
+        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-gray-200 text-gray-500 text-sm">
+          <p>© 2024 Монгол Хоол. Бүх эрх хуулиар хамгаалагдсан.</p>
         </div>
       </div>
     </footer>

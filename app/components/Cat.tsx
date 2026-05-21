@@ -1,47 +1,52 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Үсрэлт хийхэд хэрэгтэй
 
 type Category = { id: number; name: string };
 
-export default function Categories() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [active, setActive] = useState<number | null>(null);
-  const router = useRouter();
+export default function Cat() {
+  const [categories, setCategories] = useState<Category[]>([
+    { id: 1, name: "БҮГД" },
+    { id: 2, name: "ХАЛУУН ХООЛ" },
+    { id: 3, name: "ШӨЛ" },
+    { id: 4, name: "ХҮЙТЭН ХООЛ" },
+    { id: 5, name: "УНДАА" },
+    { id: 6, name: "ЦАГААН ИДЭЭ" },
+  ]);
 
-  useEffect(() => {
-    fetch("/api/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data);
-        if (data.length > 0) setActive(data[0].id);
-      });
-  }, []);
+  const [active, setActive] = useState<number>(1);
+  const router = useRouter(); // Router-оо зарлаж өгнө
 
-  const handleTab = (id: number) => {
+  const handleCategoryClick = (id: number) => {
     setActive(id);
-    router.push(`/category/${id}`);
+    // Хэрэв "БҮГД" (ID: 1) бол нүүр хуудас руу, бусад бол тухайн ID-руу үсэрнэ
+    if (id === 1) {
+      router.push("/");
+    } else {
+      router.push(`/category/${id}`); // Жишээ нь: /category/2
+    }
   };
 
   return (
-    <div className="py-6 overflow-hidden">
-      <h2 className="text-white text-2xl font-bold mb-6">Categories</h2>
-      <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
-        <button className="text-white text-lg flex-shrink-0">‹</button>
+    <div className="py-10">
+      <h2 className="text-[#2A1C0F] text-3xl font-black mb-8 uppercase tracking-tight">
+        ХООЛНЫ ЦЭС
+      </h2>
+
+      <div className="flex items-center gap-6 overflow-x-auto scrollbar-hide pb-4">
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => handleTab(cat.id)}
-            className={`px-5 py-2 rounded-full font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+            onClick={() => handleCategoryClick(cat.id)} // Функцээ энд дуудна
+            className={`px-6 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${
               active === cat.id
-                ? "bg-[#E74C3C] text-white"
-                : "bg-white text-black hover:bg-gray-100"
+                ? "bg-[#634832] text-white shadow-md"
+                : "bg-transparent text-[#8B5E34] hover:bg-[#8B5E34]/10"
             }`}
           >
             {cat.name}
           </button>
         ))}
-        <button className="text-white text-lg flex-shrink-0">›</button>
       </div>
     </div>
   );

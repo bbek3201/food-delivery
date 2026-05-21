@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
+import { addToCart } from "@/lib/cart"; // Сагсанд нэмэх функцээ оруулж ирээрэй
 
 type Dish = {
   id: string;
   name: string;
-  price: string;
-  image_url: string;
+  price: number;
+  image: string; // image_url-ийг image болгож засав
   description: string;
 };
 
@@ -14,38 +15,65 @@ export default function AppetizersSection() {
   const [dishes, setDishes] = useState<Dish[]>([]);
 
   useEffect(() => {
-    fetch("/api/dishes?category_id=1")
+    // Зуушны category_id нь 4 (SQL дээр Хүйтэн хоол/Салат гэж оруулсан)
+    fetch("/api/dishes?category_id=4")
       .then((res) => res.json())
       .then(setDishes);
   }, []);
 
+  if (dishes.length === 0) return null; // Өгөгдөл байхгүй бол харуулахгүй
+
   return (
-    <section className="py-10">
-      <h2 className="text-white text-2xl font-bold mb-8">Appetizers</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dishes.map((food) => (
-          <div key={food.id} className="bg-white rounded-4xl p-4 shadow-xl">
-            <div className="relative h-48 w-full rounded-3xl overflow-hidden mb-4">
+    <section className="py-12">
+      {/* Гарчиг - Бор өнгө */}
+      <h2 className="text-[#2A1C0F] text-3xl font-black mb-8 uppercase tracking-tight">
+        Зууш ба Салат
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {dishes.slice(0, 4).map((food) => (
+          <div
+            key={food.id}
+            className="bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50"
+          >
+            {/* Зургийн хэсэг */}
+            <div className="relative h-44 w-full rounded-[2rem] overflow-hidden mb-4">
               <img
-                src={food.image_url}
+                src={food.image || "/images/placeholder.png"}
                 alt={food.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
-              <button className="absolute bottom-3 right-3 bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-                <span className="text-red-500 text-xl font-bold">+</span>
+
+              {/* Нэмэх товч - Улаан биш БОР болгосон */}
+              <button
+                onClick={() =>
+                  addToCart({
+                    id: food.id,
+                    name: food.name,
+                    price: food.price,
+                    image_url: food.image,
+                  })
+                }
+                className="absolute bottom-3 right-3 bg-[#634832] w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
+              >
+                <span className="text-white text-2xl font-bold">+</span>
               </button>
             </div>
-            <div className="px-1">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-[#E74C3C] font-bold text-lg leading-tight">
-                  {food.name}
-                </h3>
-                <span className="font-bold text-black text-lg">
-                  ${food.price}
+
+            {/* Мэдээллийн хэсэг */}
+            <div className="px-2">
+              <h3 className="text-[#2A1C0F] font-extrabold text-lg leading-tight mb-2 group-hover:text-[#8B5E34] transition-colors">
+                {food.name}
+              </h3>
+
+              <div className="flex justify-between items-center">
+                <span className="font-black text-[#8B5E34] text-xl">
+                  ₮{Number(food.price).toLocaleString()}
                 </span>
               </div>
-              <p className="text-gray-500 text-xs leading-relaxed">
-                {food.description}
+
+              <p className="text-gray-400 text-[10px] mt-2 line-clamp-2 leading-relaxed">
+                {food.description || "Шинэхэн орцтой амттай монгол зууш."}
               </p>
             </div>
           </div>
