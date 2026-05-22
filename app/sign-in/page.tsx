@@ -3,15 +3,47 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const router = useRouter();
 
+  const validateEmail = (value: string) => {
+    if (!value) setEmailError("И-мэйл хаяг оруулна уу");
+    else if (!EMAIL_REGEX.test(value))
+      setEmailError("И-мэйл хаяг буруу байна.");
+    else setEmailError("");
+  };
+
+  const validatePassword = (value: string) => {
+    if (!value) setPasswordError("Нууц үг оруулна уу");
+    else if (value.length < 8)
+      setPasswordError("Нууц үг хамгийн багадаа 8 тэмдэгт");
+    else if (!PASSWORD_REGEX.test(value))
+      setPasswordError("Том, жижиг үсэг, тоо агуулна уу");
+    else setPasswordError("");
+  };
+
+  const isFormValid =
+    EMAIL_REGEX.test(email) &&
+    PASSWORD_REGEX.test(password) &&
+    !emailError &&
+    !passwordError;
+
   const handleSubmit = async () => {
+    validateEmail(email);
+    validatePassword(password);
+    if (!isFormValid) return;
+
     setLoading(true);
     setError("");
     const res = await fetch("/api/auth/sign-in", {
@@ -25,75 +57,112 @@ export default function SignInPage() {
     if (res.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      router.push("/"); // бүртгэлтэй → нүүр хуудас
+      router.push("/");
     } else {
-      setError(data.error); // бүртгэлгүй → алдаа харуулна
+      setError(data.error || "Нэвтрэхэд алдаа гарлаа");
     }
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/2 flex flex-col justify-center px-16">
+    <div className="flex h-screen font-sans">
+      <div className="w-1/2 flex flex-col justify-center px-12 bg-[#F5EFE6]">
         <button
           onClick={() => router.back()}
-          className="w-8 h-8 border rounded mb-10 text-gray-500"
+          className="w-8 h-8 flex items-center justify-center border border-[#D4BFA0] rounded-lg mb-8 text-[#8B5E34]"
         >
           ‹
         </button>
-        <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
-        <p className="text-gray-500 mb-8">Sign in to your account.</p>
 
-        <input
-          type="email"
-          placeholder="Enter your email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border rounded-lg px-4 py-3 mb-4 w-full outline-none"
-        />
+        <h1 className="text-3xl font-bold text-[#3D2B1A] mb-2">
+          Тавтай морил 👋
+        </h1>
+        <p className="text-sm text-[#7A5C3A] mb-8">
+          Дансандаа нэвтэрч захиалгаа хийгээрэй.
+        </p>
 
-        <div className="relative mb-2">
+        {/* Email */}
+        <div className="mb-4">
           <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border rounded-lg px-4 py-3 w-full outline-none"
+            type="email"
+            placeholder="И-мэйл хаяг"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value);
+            }}
+            className={`w-full bg-white border-[1.5px] rounded-xl px-4 py-3 outline-none ${emailError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
           />
+          {emailError && (
+            <p className="text-[#C0392B] text-xs mt-1">⚠️ {emailError}</p>
+          )}
         </div>
 
-        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-
-        <label className="flex items-center gap-2 text-sm text-gray-500 mb-6 cursor-pointer">
+        {/* Password */}
+        <div className="mb-2">
           <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={(e) => setShowPassword(e.target.checked)}
-            className="w-4 h-4"
+            type={showPassword ? "text" : "password"}
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              validatePassword(e.target.value);
+            }}
+            className={`w-full bg-white border-[1.5px] rounded-xl px-4 py-3 outline-none ${passwordError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
           />
-          Show password
-        </label>
+          {passwordError && (
+            <p className="text-[#C0392B] text-xs mt-1">⚠️ {passwordError}</p>
+          )}
+        </div>
+
+        {/* НЭМЭГДСЭН ХЭСЭГ: Нууц үг харуулах & Сэргээх линк */}
+        <div className="flex items-center justify-between mb-6">
+          <label className="flex items-center gap-2 text-xs text-[#7A5C3A] cursor-pointer">
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={(e) => setShowPassword(e.target.checked)}
+              className="accent-[#8B5E34]"
+            />
+            Нууц үг харуулах
+          </label>
+          <a
+            href="/forgot-password"
+            className="text-xs text-[#8B5E34] font-bold hover:underline"
+          >
+            Нууц үг мартсан уу?
+          </a>
+        </div>
+
+        {error && (
+          <p className="text-[#C0392B] text-xs bg-[#FDECEA] p-2 rounded-lg mb-2">
+            ⚠️ {error}
+          </p>
+        )}
 
         <button
           onClick={handleSubmit}
-          disabled={loading}
-          className="bg-gray-300 text-white py-3 rounded-lg font-semibold w-full hover:bg-[#E74C3C] transition-colors"
+          disabled={loading || !isFormValid}
+          className={`w-full py-3.5 rounded-xl font-bold text-sm ${isFormValid ? "bg-[#8B5E34] text-[#F5EFE6]" : "bg-[#D4BFA0] text-gray-500"}`}
         >
-          {loading ? "Loading..." : "Let's Go"}
+          {loading ? "Уншиж байна..." : "Нэвтрэх →"}
         </button>
 
-        <p className="text-center mt-6 text-gray-500">
-          Already have an account?{" "}
-          <a href="/sign-up" className="text-blue-500 font-medium">
-            Sign up
+        <p className="text-center mt-5 text-sm text-[#7A5C3A]">
+          Данс байхгүй юу?{" "}
+          <a
+            href="/sign-up"
+            className="text-[#8B5E34] font-bold hover:underline"
+          >
+            Бүртгүүлэх
           </a>
         </p>
       </div>
 
-      <div className="w-1/2 h-full">
+      <div className="w-1/2 bg-[#3D2B1A]">
         <img
-          src="/food-delivery.png"
-          alt="delivery"
-          className="w-full h-full object-cover"
+          src="hool.png"
+          alt="Монгол хоол"
+          className="w-full h-full object-cover opacity-80"
         />
       </div>
     </div>

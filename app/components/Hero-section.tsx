@@ -36,19 +36,19 @@ export default function HeroSection() {
           <div className="bg-[#FDF9F3] rounded-3xl shadow-xl p-8 grid grid-cols-3 gap-6 border border-gray-100">
             {/* Feature 1 */}
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#8B5E34]/20 rounded-full flex-shrink-0" />
+              <div />
               <div className="flex flex-col">
                 <span className="text-[#634832] font-extrabold text-sm uppercase">
                   Үндэсний уламжлал
                 </span>
                 <span className="text-[#8B5E34] text-[10px]">
-                  Эртийн уламжлалт жор, арга барил
+                  Эртний уламжлалт жор, арга барил
                 </span>
               </div>
             </div>
             {/* Feature 2 */}
             <div className="flex items-center gap-4 border-x border-gray-200 px-6">
-              <div className="w-12 h-12 bg-[#8B5E34]/20 rounded-full flex-shrink-0" />
+              <div />
               <div className="flex flex-col">
                 <span className="text-[#634832] font-extrabold text-sm uppercase">
                   Эрүүл орц, найрлага
@@ -60,8 +60,8 @@ export default function HeroSection() {
             </div>
             {/* Feature 3 */}
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#8B5E34]/20 rounded-full flex-shrink-0" />
-              <div className="flex flex-col">
+              <div />
+              <div className="flex flex-col ">
                 <span className="text-[#634832] font-extrabold text-sm uppercase">
                   Шуурхай хүргэлт
                 </span>

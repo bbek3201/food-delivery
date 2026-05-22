@@ -16,14 +16,23 @@ export default function Footer() {
         <div className="flex gap-6">
           <span className="text-sm">Сошиал хаягууд:</span>
           <div className="flex gap-4">
-            <FaFacebook className="w-6 h-6 hover:text-[#8B5E34] cursor-pointer" />
-            <FaInstagram className="w-6 h-6 hover:text-[#8B5E34] cursor-pointer" />
-            <FaTwitter className="w-6 h-6 hover:text-[#8B5E34] cursor-pointer" />
+            <FaFacebook
+              size={24}
+              className=" hover:text-[#8B5E34] cursor-pointer"
+            />
+            <FaInstagram
+              size={24}
+              className=" hover:text-[#8B5E34] cursor-pointer"
+            />
+            <FaTwitter
+              size={24}
+              className=" hover:text-[#8B5E34] cursor-pointer"
+            />
           </div>
         </div>
         <div className="flex gap-4">
-          <img src="/app-store.png" alt="App Store" className="h-10" />
-          <img src="/google-play.png" alt="Google Play" className="h-10" />
+          <img src="/appstore.png" alt="App Store" className="h-10" />
+          <img src="/googleplay.png" alt="Google Play" className="h-10" />
         </div>
       </div>
 
