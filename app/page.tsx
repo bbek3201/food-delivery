@@ -8,7 +8,6 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import HeroSection from "./components/Hero-section";
 
-// Хоолны жагсаалтууд (Картууд)
 import Appetizers from "./components/Appetizers";
 import Salads from "./components/Salads";
 import LunchFavorites from "./components/LunchFavorites";
