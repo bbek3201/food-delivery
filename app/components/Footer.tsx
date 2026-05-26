@@ -5,7 +5,6 @@ import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 export default function Footer() {
   return (
     <footer className="w-full">
-      {/* 1. Дээд талын утас болон Сошиал хэсэг */}
       <div className="bg-[#2A1C0F] text-white py-6 px-10 flex flex-wrap justify-between items-center gap-6">
         <div className="flex items-center gap-4">
           <span className="text-sm uppercase tracking-widest text-gray-400">
@@ -36,10 +35,8 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* 2. Үндсэн Footer хэсэг */}
       <div className="bg-[#FDF9F3] text-[#2A1C0F] px-10 py-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Logo хэсэг */}
           <div className="space-y-4">
             <h2 className="text-3xl font-black italic text-[#8B5E34]">
               МОНГОЛ ХООЛ
@@ -50,7 +47,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Цэс */}
           <div className="space-y-4">
             <h3 className="font-bold uppercase tracking-widest text-sm text-[#8B5E34]">
               Цэс
@@ -108,7 +104,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Холбоо барих */}
           <div className="space-y-4">
             <h3 className="font-bold uppercase tracking-widest text-sm text-[#8B5E34]">
               Холбоо барих
@@ -119,7 +114,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Доод талын copyright */}
         <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-gray-200 text-gray-500 text-sm">
           <p>© 2024 Монгол Хоол. Бүх эрх хуулиар хамгаалагдсан.</p>
         </div>

@@ -7,7 +7,7 @@ type Dish = {
   id: string;
   name: string;
   price: number;
-  image: string; // image_url-ийг image болгов
+  image: string;
   description: string;
 };
 
@@ -15,7 +15,6 @@ export default function Salads() {
   const [dishes, setDishes] = useState<Dish[]>([]);
 
   useEffect(() => {
-    // Хүйтэн хоол/Салатны ангилал ID: 4
     fetch("/api/dishes?category_id=4")
       .then((res) => res.json())
       .then(setDishes);
@@ -25,7 +24,6 @@ export default function Salads() {
 
   return (
     <section className="py-12">
-      {/* Гарчиг - Дизайнтай нийцсэн бор өнгө */}
       <h2 className="text-[#2A1C0F] text-3xl font-black mb-10 uppercase tracking-tight">
         Салат ба Зууш
       </h2>
@@ -34,17 +32,15 @@ export default function Salads() {
         {dishes.map((food) => (
           <div
             key={food.id}
-            className="bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50 flex flex-col"
+            className="bg-white rounded-4xl p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50 flex flex-col"
           >
-            {/* Зургийн хэсэг */}
-            <div className="relative h-44 w-full rounded-[1.5rem] overflow-hidden mb-4">
+            <div className="relative h-44 w-full rounded-3xl overflow-hidden mb-4">
               <img
                 src={food.image || "/images/placeholder.png"}
                 alt={food.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
 
-              {/* Сагсанд нэмэх товч - БОР */}
               <button
                 onClick={() =>
                   addToCart({
@@ -60,8 +56,7 @@ export default function Salads() {
               </button>
             </div>
 
-            {/* Мэдээлэл */}
-            <div className="px-1 flex flex-col flex-grow">
+            <div className="px-1 flex flex-col grow">
               <h3 className="text-[#2A1C0F] font-extrabold text-lg leading-tight mb-2 group-hover:text-[#8B5E34] transition-colors">
                 {food.name}
               </h3>

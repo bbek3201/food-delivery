@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
-import { addToCart } from "@/lib/cart"; // Сагсанд нэмэх функцээ оруулж ирээрэй
+import { addToCart } from "@/lib/cart";
 
 type Dish = {
   id: string;
   name: string;
   price: number;
-  image: string; // image_url-ийг image болгож засав
+  image: string;
   description: string;
 };
 
@@ -15,17 +15,15 @@ export default function AppetizersSection() {
   const [dishes, setDishes] = useState<Dish[]>([]);
 
   useEffect(() => {
-    // Зуушны category_id нь 4 (SQL дээр Хүйтэн хоол/Салат гэж оруулсан)
     fetch("/api/dishes?category_id=4")
       .then((res) => res.json())
       .then(setDishes);
   }, []);
 
-  if (dishes.length === 0) return null; // Өгөгдөл байхгүй бол харуулахгүй
+  if (dishes.length === 0) return null;
 
   return (
     <section className="py-12">
-      {/* Гарчиг - Бор өнгө */}
       <h2 className="text-[#2A1C0F] text-3xl font-black mb-8 uppercase tracking-tight">
         Зууш ба Салат
       </h2>
@@ -36,15 +34,13 @@ export default function AppetizersSection() {
             key={food.id}
             className="bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50"
           >
-            {/* Зургийн хэсэг */}
-            <div className="relative h-44 w-full rounded-[2rem] overflow-hidden mb-4">
+            <div className="relative h-44 w-full rounded-4xl overflow-hidden mb-4">
               <img
                 src={food.image || "/images/placeholder.png"}
                 alt={food.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
 
-              {/* Нэмэх товч - Улаан биш БОР болгосон */}
               <button
                 onClick={() =>
                   addToCart({
@@ -60,7 +56,6 @@ export default function AppetizersSection() {
               </button>
             </div>
 
-            {/* Мэдээллийн хэсэг */}
             <div className="px-2">
               <h3 className="text-[#2A1C0F] font-extrabold text-lg leading-tight mb-2 group-hover:text-[#8B5E34] transition-colors">
                 {food.name}

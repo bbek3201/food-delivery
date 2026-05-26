@@ -28,22 +28,19 @@ export default function LunchSalads() {
         Үндсэн хоол (Халуун хоол)
       </h2>
 
-      {/* Grid-ийг lg:grid-cols-4 болгож, items-stretch ашиглан тэгшитгэв */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
         {dishes.slice(0, 4).map((food) => (
           <div
             key={food.id}
-            className="bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50 flex flex-col h-full"
+            className="bg-white rounded-4xl p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50 flex flex-col h-full"
           >
-            {/* 1. Зургийн өндрийг h-44 болгож түгжив */}
-            <div className="relative h-44 w-full rounded-[1.5rem] overflow-hidden mb-4 shrink-0">
+            <div className="relative h-44 w-full rounded-3xlflow-hidden mb-4 shrink-0">
               <img
                 src={food.image || "/images/placeholder.png"}
                 alt={food.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
 
-              {/* 2. Сагсны товчийг w-10 h-10 болгож ижилсүүлэв */}
               <button
                 onClick={() =>
                   addToCart({
@@ -59,8 +56,7 @@ export default function LunchSalads() {
               </button>
             </div>
 
-            {/* 3. Текстийн хэсэг - Бүх картууд ижил өндөртэй харагдана */}
-            <div className="flex flex-col flex-grow px-1">
+            <div className="flex flex-col grow px-1">
               <h3 className="text-[#2A1C0F] font-extrabold text-lg leading-tight mb-2 group-hover:text-[#8B5E34] transition-colors line-clamp-1">
                 {food.name}
               </h3>
@@ -71,8 +67,7 @@ export default function LunchSalads() {
                 </span>
               </div>
 
-              {/* Тайлбар хэсэг - h-[2.5rem] ашиглан картуудыг зөрөхийг зогсоов */}
-              <p className="text-gray-400 text-[10px] mt-2 line-clamp-2 leading-relaxed h-[2.5rem]">
+              <p className="text-gray-400 text-[10px] mt-2 line-clamp-2 leading-relaxed h-10">
                 {food.description ||
                   "Монгол уламжлалт аргаар бэлтгэсэн амт чанар бүхий халуун хоол."}
               </p>

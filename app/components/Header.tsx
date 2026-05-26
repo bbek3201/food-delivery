@@ -4,10 +4,8 @@ import React from "react";
 export default function Header() {
   return (
     <header className="w-full h-20 bg-[#FDF9F3] flex items-center justify-between px-10 shadow-sm">
-      {/* Зүүн тал: Лого болон Текст */}
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 bg-[#8B5E34] rounded-full flex items-center justify-center">
-          {/* Энд өөрийн логоны icon-г (svg) эсвэл img-г хийнэ */}
           <img src="/header.png" alt="Logo" className="w-8 h-8 invert" />
         </div>
         <div className="flex flex-col leading-tight">
@@ -20,7 +18,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Гол хэсэг: Цэс (Navigation) */}
       <nav className="hidden md:flex items-center gap-8">
         {["НҮҮР", "ХООЛНЫ ЦЭС", "БИДНИЙ ТУХАЙ", "БИДДЭЭ", "ХОЛБОО БАРИХ"].map(
           (item) => (
@@ -35,9 +32,7 @@ export default function Header() {
         )}
       </nav>
 
-      {/* Баруун тал: Хайлт, Сагс, Нэвтрэх */}
       <div className="flex items-center gap-6">
-        {/* Хайлтын дүрс */}
         <button className="text-[#634832] hover:scale-110 transition-transform">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +50,6 @@ export default function Header() {
           </svg>
         </button>
 
-        {/* Сагсны дүрс */}
         <div className="relative cursor-pointer hover:scale-110 transition-transform">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +70,6 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Нэвтрэх товч */}
         <button
           onClick={() => (window.location.href = "/sign-up")}
           className="bg-[#634832] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#4E3928] transition-all shadow-md"

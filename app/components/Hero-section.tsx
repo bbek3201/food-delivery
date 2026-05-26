@@ -4,9 +4,7 @@ import React from "react";
 export default function HeroSection() {
   return (
     <div className="relative w-full">
-      {/* 1. Үндсэн Hero хэсэг */}
       <div className="relative w-full h-[600px] bg-[#2A1C0F] overflow-visible">
-        {/* Арын дэвсгэр зураг */}
         <img
           src="buuz.png"
           alt="background"
@@ -14,7 +12,6 @@ export default function HeroSection() {
         />
 
         <div className="relative z-10 max-w-7xl mx-auto h-full flex items-center justify-between px-10">
-          {/* Зүүн тал: Текст */}
           <div className="w-1/2">
             <h1 className="text-white font-black text-6xl uppercase leading-tight">
               Монгол
@@ -30,8 +27,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* 2. Доод талын Цагаан блок (Features) */}
-        {/* -bottom-16 ашиглан Hero-оос илүү гаргаж байрлуулна */}
         <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 z-30 w-full max-w-6xl px-4">
           <div className="bg-[#FDF9F3] rounded-3xl shadow-xl p-8 grid grid-cols-3 gap-6 border border-gray-100">
             {/* Feature 1 */}
@@ -46,7 +41,7 @@ export default function HeroSection() {
                 </span>
               </div>
             </div>
-            {/* Feature 2 */}
+
             <div className="flex items-center gap-4 border-x border-gray-200 px-6">
               <div />
               <div className="flex flex-col">
@@ -58,7 +53,7 @@ export default function HeroSection() {
                 </span>
               </div>
             </div>
-            {/* Feature 3 */}
+
             <div className="flex items-center gap-4">
               <div />
               <div className="flex flex-col ">
@@ -74,8 +69,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* 3. Доод талын хоосон зай (Spacer) */}
-      {/* Энэ зай байхгүй бол блок чинь Категори хэсгийг дарчихна */}
       <div className="h-32 w-full bg-transparent"></div>
     </div>
   );

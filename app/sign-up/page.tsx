@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,6 @@ export default function SignUpPage() {
 
   const router = useRouter();
 
-  // ===== VALIDATE =====
   const validateEmail = (value: string) => {
     if (!value) {
       setEmailError("И-мэйл хаяг оруулна уу");
@@ -83,7 +83,6 @@ export default function SignUpPage() {
     }
   };
 
-  // Strength тооцоолох
   const strengthChecks = [
     password.length >= 8,
     /[A-Z]/.test(password),
@@ -91,7 +90,6 @@ export default function SignUpPage() {
     /\d/.test(password),
   ];
 
-  // Input border өнгө
   const inputClass = (value: string, err: string) =>
     `w-full bg-white border-[1.5px] rounded-xl px-4 py-3 text-sm text-[#3D2B1A] placeholder-[#B8A08A] outline-none transition-all ${
       err
@@ -103,7 +101,6 @@ export default function SignUpPage() {
 
   return (
     <div className="flex h-screen font-sans">
-      {/* ===== ЗҮҮН ТАЛ ===== */}
       <div className="w-1/2 flex flex-col justify-center px-12 bg-[#F5EFE6] overflow-y-auto">
         <button
           onClick={() => router.back()}
@@ -112,7 +109,6 @@ export default function SignUpPage() {
           ‹
         </button>
 
-        {/* Лого */}
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-full bg-[#8B5E34] flex items-center justify-center">
             <span className="text-[#F5EFE6] text-lg font-bold">М</span>
@@ -162,7 +158,6 @@ export default function SignUpPage() {
           )}
         </div>
 
-        {/* Нууц үг */}
         <div className="mb-4">
           <label className="block text-xs font-semibold text-[#7A5C3A] uppercase tracking-wider mb-2">
             Нууц үг
@@ -189,7 +184,7 @@ export default function SignUpPage() {
               ✓ Нууц үг хүчинтэй
             </p>
           )}
-          {/* Strength bar */}
+
           {password && (
             <div className="flex gap-1 mt-2">
               {strengthChecks.map((met, i) => (
@@ -202,7 +197,7 @@ export default function SignUpPage() {
               ))}
             </div>
           )}
-          {/* Strength hint */}
+
           {password && (
             <p className="text-[#B8A08A] text-[11px] mt-1.5">
               {strengthChecks.filter(Boolean).length === 4
@@ -212,7 +207,6 @@ export default function SignUpPage() {
           )}
         </div>
 
-        {/* Нууц үг давтах */}
         <div className="mb-6">
           <label className="block text-xs font-semibold text-[#7A5C3A] uppercase tracking-wider mb-2">
             Нууц үг давтах
@@ -240,7 +234,6 @@ export default function SignUpPage() {
           )}
         </div>
 
-        {/* Товч */}
         <button
           onClick={handleSubmit}
           disabled={loading || !isFormValid}
@@ -280,14 +273,13 @@ export default function SignUpPage() {
         </div>
       </div>
 
-      {/* ===== БАРУУН ТАЛ ===== */}
       <div className="w-1/2 relative overflow-hidden bg-[#3D2B1A]">
         <img
           src="hool.png"
           alt="Монгол хоол"
           className="w-full h-full object-cover opacity-80"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#3D2B1A]/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#3D2B1A]/80 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
           <span className="inline-flex items-center gap-1.5 bg-[#8B5E34]/80 text-[#F5EFE6] text-xs font-semibold px-3 py-1.5 rounded-full mb-3">
             🔥 Шинэ захиалга

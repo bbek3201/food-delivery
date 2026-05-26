@@ -9,8 +9,8 @@ import FoodDetailSheet from "@/app/components/FoodDetailSheet";
 type Dish = {
   id: string;
   name: string;
-  price: number; // SQL-ээс тоо орж ирнэ
-  image: string; // image_url биш image болгож засав
+  price: string;
+  image_url: string;
   description: string;
 };
 
@@ -24,8 +24,6 @@ export default function CategoryPage() {
     fetch(`/api/dishes?category_id=${id}`)
       .then((res) => res.json())
       .then((data) => {
-        // Хэрэв API бүх хоолыг буцаадаг бол id-аар нь шүүнэ
-        // Хэрэв API өөрөө шүүдэг бол шууд setDishes(data)
         setDishes(data);
       });
 
@@ -38,10 +36,8 @@ export default function CategoryPage() {
   }, [id]);
 
   return (
-    // Нийт дэвсгэр өнгийг цайвар шаргал болгов
     <div className="min-h-screen bg-[#FDF9F3] px-8 py-10">
       <div className="max-w-7xl mx-auto">
-        {/* Буцах товчлуур ба Гарчиг */}
         <div className="flex items-center gap-6 mb-10">
           <button
             onClick={() => window.history.back()}
@@ -54,22 +50,20 @@ export default function CategoryPage() {
           </h1>
         </div>
 
-        {/* Хоолны жагсаалт */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {dishes.map((dish) => (
             <div
               key={dish.id}
-              className="bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-xl transition-all group cursor-pointer border border-gray-100"
+              className="bg-white rounded-4xl p-4 shadow-sm hover:shadow-xl transition-all group cursor-pointer border border-gray-100"
               onClick={() => setSelected(dish)}
             >
-              <div className="relative h-48 w-full rounded-[1.5rem] overflow-hidden mb-4">
+              <div className="relative h-48 w-full rounded-3xl overflow-hidden mb-4">
                 <img
-                  src={dish.image || "/images/placeholder.png"} // image багана ашиглав
+                  src={dish.image_url || "/images/placeholder.png"}
                   alt={dish.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
 
-                {/* Нэмэх товчлуур - Бор өнгөтэй */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -77,7 +71,7 @@ export default function CategoryPage() {
                       id: dish.id,
                       name: dish.name,
                       price: Number(dish.price),
-                      image_url: dish.image,
+                      image_url: dish.image_url,
                     });
                   }}
                   className="absolute bottom-3 right-3 bg-[#634832] w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
@@ -105,7 +99,6 @@ export default function CategoryPage() {
         </div>
       </div>
 
-      {/* Дэлгэрэнгүй харах хэсэг */}
       <FoodDetailSheet dish={selected} onClose={() => setSelected(null)} />
     </div>
   );

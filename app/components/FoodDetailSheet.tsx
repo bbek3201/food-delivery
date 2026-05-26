@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
@@ -54,7 +55,7 @@ export default function FoodDetailSheet({ dish, onClose }: Props) {
         style={{ width: 640, maxWidth: "95vw", height: 340 }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative flex-shrink-0" style={{ width: 260 }}>
+        <div className="relative shrink-0" style={{ width: 260 }}>
           <img
             src={dish.image_url}
             alt={dish.name}

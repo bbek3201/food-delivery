@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Үсрэлт хийхэд хэрэгтэй
+import { useRouter } from "next/navigation";
 
 type Category = { id: number; name: string };
 
@@ -15,15 +16,15 @@ export default function Cat() {
   ]);
 
   const [active, setActive] = useState<number>(1);
-  const router = useRouter(); // Router-оо зарлаж өгнө
+  const router = useRouter();
 
   const handleCategoryClick = (id: number) => {
     setActive(id);
-    // Хэрэв "БҮГД" (ID: 1) бол нүүр хуудас руу, бусад бол тухайн ID-руу үсэрнэ
+
     if (id === 1) {
       router.push("/");
     } else {
-      router.push(`/category/${id}`); // Жишээ нь: /category/2
+      router.push(`/category/${id}`);
     }
   };
 
@@ -37,7 +38,7 @@ export default function Cat() {
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => handleCategoryClick(cat.id)} // Функцээ энд дуудна
+            onClick={() => handleCategoryClick(cat.id)}
             className={`px-6 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${
               active === cat.id
                 ? "bg-[#634832] text-white shadow-md"

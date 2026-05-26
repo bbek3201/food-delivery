@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import { useState, useEffect, useRef } from "react";
@@ -54,12 +55,8 @@ export default function LocationInput() {
   return (
     <div ref={ref} className="relative">
       <div className="w-62.75 h-9 bg-white flex items-center rounded-lg px-2">
-        <img
-          className="w-4 h-4 mr-1 flex-shrink-0"
-          src="/Vector.svg"
-          alt="Pin"
-        />
-        <p className="text-[12px] text-red-500 whitespace-nowrap flex-shrink-0">
+        <img className="w-4 h-4 mr-1 shrink-0" src="/Vector.svg" alt="Pin" />
+        <p className="text-[12px] text-red-500 whitespace-nowrap shrink-0">
           Delivery address:
         </p>
         {open ? (
@@ -78,11 +75,7 @@ export default function LocationInput() {
             {selected}
           </p>
         )}
-        <img
-          className="ml-1 flex-shrink-0"
-          src="/Chevron icon.svg"
-          alt="Arrow"
-        />
+        <img className="ml-1 shrink-0" src="/Chevron icon.svg" alt="Arrow" />
       </div>
 
       {results.length > 0 && open && (

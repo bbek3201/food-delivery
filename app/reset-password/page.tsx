@@ -1,12 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { updatePasswordAction } from "@/app/actions";
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const token = searchParams.get("token");
+  const router = useRouter();
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -14,36 +15,30 @@ export default function ResetPasswordPage() {
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ... дотор нь handleReset функцийг ингэж өөрчил
   async function handleReset(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setStatus(null);
 
+    if (!token) {
+      setStatus("Error: Invalid or missing reset token.");
+      return;
+    }
+
     if (password !== confirm) {
-      setStatus("Those password did’t match, Try again.");
-      setLoading(false);
+      setStatus("Passwords don't match. Try again.");
       return;
     }
 
-    if (!email) {
-      setStatus("Error: Email missing from URL.");
-      setLoading(false);
-      return;
-    }
-
-    // Use FormData as updatePasswordAction expects
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    const res = await updatePasswordAction(formData);
+    setLoading(true);
+    const res = await updatePasswordAction({ token, password });
+    setLoading(false);
 
     if (res?.error) {
       setStatus(`✗ ${res.error}`);
     } else {
-      setStatus("✓ Password successfully updated! You can now log in.");
+      setStatus("✓ Password successfully updated!");
+      setTimeout(() => router.push("/sign-in"), 2000);
     }
-    setLoading(false);
   }
 
   return (
@@ -55,8 +50,7 @@ export default function ResetPasswordPage() {
               Create new password
             </h1>
             <h2 className="text-[16px] text-zinc-500">
-              Set a new password with a combination of letters and numbers for
-              better security.
+              Set a new password for your account.
             </h2>
           </div>
 
@@ -96,13 +90,12 @@ export default function ResetPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-zinc-300 px-3 py-2 text-sm font-medium text-white transition disabled:opacity-50"
+            className="w-full rounded-md bg-zinc-600 px-3 py-2 text-sm font-medium text-white transition disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create password"}
           </button>
         </form>
       </div>
-
       <div className="hidden lg:block w-1/2 relative m-6">
         <img
           src="/main.png"

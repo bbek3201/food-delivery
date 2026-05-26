@@ -1,31 +1,35 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import { neon } from "@neondatabase/serverless";
+import { sendResetEmail } from "@/lib/email";
+import { randomBytes } from "crypto";
+import { nanoid } from "nanoid";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const sql = neon(process.env.DATABASE_URL!);
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
 
-    // 1. Энд database-ээсээ user байгаа эсэхийг шалгах хэрэгтэй (prisma)
-    // const user = await prisma.user.findUnique({ where: { email } });
-    // if (!user) return NextResponse.json({ error: "И-мэйл олдсонгүй" }, { status: 404 });
-
-    // 2. И-мэйл илгээх
-    const { data, error } = await resend.emails.send({
-      from: "Монгол Хоол <onboarding@resend.dev>",
-      to: [email],
-      subject: "Нууц үг сэргээх",
-      html: `<p>Сайн байна уу? Та нууц үгээ сэргээх бол доорх линк дээр дарна уу:</p>
-             <a href="http://localhost:3000/reset-password?token=XYZ">Нууц үг солих</a>`,
-    });
-
-    if (error) {
-      return NextResponse.json({ error }, { status: 500 });
+    const users = await sql`SELECT id FROM users WHERE email = ${email}`;
+    if (users.length === 0) {
+      return NextResponse.json({ success: true });
     }
 
-    return NextResponse.json({ success: true, data });
+    const token = randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 1000 * 60 * 60);
+    const id = nanoid();
+
+    await sql`
+      INSERT INTO password_reset_tokens (id, email, token, expires)
+      VALUES (${id}, ${email}, ${token}, ${expires})
+    `;
+
+    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${token}`;
+    await sendResetEmail(email, resetLink);
+
+    return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("FORGOT PASSWORD ERROR:", error);
     return NextResponse.json({ error: "Алдаа гарлаа" }, { status: 500 });
   }
 }

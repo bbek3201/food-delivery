@@ -1,42 +1,44 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+const getEmailError = (value: string): string => {
+  if (!value) return "И-мэйл хаяг оруулна уу";
+  if (!EMAIL_REGEX.test(value)) return "И-мэйл хаяг буруу байна.";
+  return "";
+};
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [success, setSuccess] = useState(false);
-
   const router = useRouter();
 
-  const validateEmail = (value: string) => {
-    if (!value) {
-      setEmailError("И-мэйл хаяг оруулна уу");
-    } else if (!EMAIL_REGEX.test(value)) {
-      setEmailError("И-мэйл хаяг буруу байна.");
-    } else {
-      setEmailError("");
-    }
-  };
-
   const handleSubmit = async () => {
-    validateEmail(email);
-    if (!email || emailError) return;
+    const error = getEmailError(email);
+    setEmailError(error);
+    if (error) return;
 
     setLoading(true);
-    // Энд чиний API дуудна (Жишээ нь: /api/auth/forgot-password)
-    const res = await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-
-    setLoading(false);
-    if (res.ok) {
-      setSuccess(true);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSuccess(true);
+      } else {
+        setEmailError("Алдаа гарлаа. Дахин оролдоно уу.");
+      }
+    } catch {
+      setEmailError("Сүлжээний алдаа.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,13 +68,13 @@ export default function ForgotPasswordPage() {
               </label>
               <input
                 type="email"
-                placeholder="tanii@gmail.com"
+                placeholder="your@gmail.com"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  validateEmail(e.target.value);
+                  setEmailError(getEmailError(e.target.value));
                 }}
-                className={`w-full bg-white border-[1.5px] rounded-xl px-4 py-3 outline-none ${
+                className={`w-full bg-white border-[1.5px] text-black rounded-xl px-4 py-3 outline-none ${
                   emailError ? "border-[#C0392B]" : "border-[#D4BFA0]"
                 }`}
               />
@@ -99,7 +101,6 @@ export default function ForgotPasswordPage() {
         </p>
       </div>
 
-      {/* Баруун талын зураг хэвээрээ */}
       <div className="w-1/2 relative overflow-hidden bg-[#3D2B1A]">
         <img
           src="hool.png"
