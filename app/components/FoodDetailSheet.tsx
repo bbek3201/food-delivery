@@ -8,7 +8,7 @@ import { addToCart } from "@/lib/cart";
 type Dish = {
   id: string;
   name: string;
-  price: string;
+  price: number;
   image_url: string;
   description: string;
 };
@@ -30,6 +30,13 @@ export default function FoodDetailSheet({ dish, onClose }: Props) {
   if (!dish) return null;
 
   const handleAdd = () => {
+    if (typeof window !== "undefined") {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        window.location.href = "/sign-in";
+        return;
+      }
+    }
     for (let i = 0; i < qty; i++) {
       addToCart({
         id: dish.id,

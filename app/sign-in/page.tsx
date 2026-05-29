@@ -57,7 +57,7 @@ export default function SignInPage() {
     if (res.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      router.push("/");
+      router.push(data.user.role === "ADMIN" ? "/admin" : "/");
     } else {
       setError(data.error || "Нэвтрэхэд алдаа гарлаа");
     }

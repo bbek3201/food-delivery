@@ -1,18 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
-import { addToCart } from "@/lib/cart";
+import FoodDetailSheet from "./FoodDetailSheet";
 
 type Dish = {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image_url: string;
   description: string;
 };
 
 export default function AppetizersSection() {
   const [dishes, setDishes] = useState<Dish[]>([]);
+  const [selected, setSelected] = useState<Dish | null>(null);
 
   useEffect(() => {
     fetch("/api/dishes?category_id=4")
@@ -32,24 +33,20 @@ export default function AppetizersSection() {
         {dishes.slice(0, 4).map((food) => (
           <div
             key={food.id}
-            className="bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50"
+            onClick={() => setSelected(food)}
+            className="bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-xl transition-all group border border-gray-50 cursor-pointer"
           >
             <div className="relative h-44 w-full rounded-4xl overflow-hidden mb-4">
               <img
-                src={food.image || "/images/placeholder.png"}
+                src={food.image_url || "/images/placeholder.png"}
                 alt={food.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
-
               <button
-                onClick={() =>
-                  addToCart({
-                    id: food.id,
-                    name: food.name,
-                    price: food.price,
-                    image_url: food.image,
-                  })
-                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelected(food);
+                }}
                 className="absolute bottom-3 right-3 bg-[#634832] w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
               >
                 <span className="text-white text-2xl font-bold">+</span>
@@ -60,13 +57,11 @@ export default function AppetizersSection() {
               <h3 className="text-[#2A1C0F] font-extrabold text-lg leading-tight mb-2 group-hover:text-[#8B5E34] transition-colors">
                 {food.name}
               </h3>
-
               <div className="flex justify-between items-center">
                 <span className="font-black text-[#8B5E34] text-xl">
                   ₮{Number(food.price).toLocaleString()}
                 </span>
               </div>
-
               <p className="text-gray-400 text-[10px] mt-2 line-clamp-2 leading-relaxed">
                 {food.description || "Шинэхэн орцтой амттай монгол зууш."}
               </p>
@@ -74,6 +69,8 @@ export default function AppetizersSection() {
           </div>
         ))}
       </div>
+
+      <FoodDetailSheet dish={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

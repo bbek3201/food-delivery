@@ -13,6 +13,13 @@ export const getCart = (): CartItem[] => {
 };
 
 export const addToCart = (item: Omit<CartItem, "quantity">) => {
+  if (typeof window !== "undefined") {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      window.location.href = "/sign-in";
+      return;
+    }
+  }
   const cart = getCart();
   const existing = cart.find((c) => c.id === item.id);
   if (existing) {
@@ -21,14 +28,19 @@ export const addToCart = (item: Omit<CartItem, "quantity">) => {
     cart.push({ ...item, quantity: 1 });
   }
   localStorage.setItem("cart", JSON.stringify(cart));
+  window.dispatchEvent(new Event("cartUpdated")); // ← нэмсэн
 };
 
 export const removeFromCart = (id: string) => {
   const cart = getCart().filter((c) => c.id !== id);
   localStorage.setItem("cart", JSON.stringify(cart));
+  window.dispatchEvent(new Event("cartUpdated")); // ← нэмсэн
 };
 
-export const clearCart = () => localStorage.removeItem("cart");
+export const clearCart = () => {
+  localStorage.removeItem("cart");
+  window.dispatchEvent(new Event("cartUpdated")); // ← нэмсэн
+};
 
 export const getCartTotal = () =>
   getCart().reduce((sum, item) => sum + item.price * item.quantity, 0);

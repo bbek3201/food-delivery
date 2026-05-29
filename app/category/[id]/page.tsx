@@ -9,7 +9,7 @@ import FoodDetailSheet from "@/app/components/FoodDetailSheet";
 type Dish = {
   id: string;
   name: string;
-  price: string;
+  price: number;
   image_url: string;
   description: string;
 };

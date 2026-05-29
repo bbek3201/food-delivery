@@ -12,7 +12,6 @@ export default function Cat() {
     { id: 3, name: "ШӨЛ" },
     { id: 4, name: "ХҮЙТЭН ХООЛ" },
     { id: 5, name: "УНДАА" },
-    { id: 6, name: "ЦАГААН ИДЭЭ" },
   ]);
 
   const [active, setActive] = useState<number>(1);

@@ -8,10 +8,9 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import HeroSection from "./components/Hero-section";
 
-import Appetizers from "./components/Appetizers";
-import Salads from "./components/Salads";
-import LunchFavorites from "./components/LunchFavorites";
-import LunchSalads from "./components/LunchSalads";
+import HotFoods from "./components/HotFoods";
+import SpecialSoup from "./components/SpecialSoup";
+import DessertandSalad from "./components/DessertandSalad";
 
 export default function Home() {
   return (
@@ -23,10 +22,10 @@ export default function Home() {
         <Categories />
 
         <div className="flex flex-col gap-16">
-          <Appetizers />
+          <DessertandSalad />
 
-          <LunchFavorites />
-          <LunchSalads />
+          <SpecialSoup />
+          <HotFoods />
         </div>
 
         <div className="flex justify-center mt-16"></div>

@@ -77,7 +77,7 @@ export default function SignUpPage() {
     if (res.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      router.push("/sign-in");
+      router.push(data.user.role === "ADMIN" ? "/admin" : "/");
     } else {
       alert(data.error || "Алдаа гарлаа");
     }
