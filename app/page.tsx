@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 export const dynamic = "force-dynamic";
@@ -8,9 +7,9 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import HeroSection from "./components/Hero-section";
 
-import HotFoods from "./components/HotFoods";
 import SpecialSoup from "./components/SpecialSoup";
 import DessertandSalad from "./components/DessertandSalad";
+import HotFoods from "./components/HotFoods";
 
 export default function Home() {
   return (

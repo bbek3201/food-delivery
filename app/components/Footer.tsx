@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -20,10 +20,6 @@ export default function Footer() {
               className=" hover:text-[#8B5E34] cursor-pointer"
             />
             <FaInstagram
-              size={24}
-              className=" hover:text-[#8B5E34] cursor-pointer"
-            />
-            <FaTwitter
               size={24}
               className=" hover:text-[#8B5E34] cursor-pointer"
             />
