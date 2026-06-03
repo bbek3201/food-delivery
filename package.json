@@ -21,7 +21,6 @@
     "nanoid": "^5.1.11",
     "next": "16.2.6",
     "next-auth": "^4.24.14",
-    "prisma": "^7.8.0",
     "prismo": "^0.0.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -38,6 +37,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "typescript": "^6.0.3"
   },

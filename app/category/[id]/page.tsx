@@ -1,6 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
+// 1. Next.js-ийг энэ хуудсыг кэшлэхийг хүчээр зогсоох тохиргоо нэмэв
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { addToCart } from "@/lib/cart";
@@ -12,6 +16,7 @@ type Dish = {
   price: number;
   image_url: string;
   description: string;
+  ingredients: string[]; // <-- 2. Найрлагын төрлийг (Type) энд нэмж өгөв
 };
 
 export default function CategoryPage() {
@@ -21,13 +26,15 @@ export default function CategoryPage() {
   const [selected, setSelected] = useState<Dish | null>(null);
 
   useEffect(() => {
-    fetch(`/api/dishes?category_id=${id}`)
+    // 3. fetch хүсэлтүүд дээр кэш уншихгүй байх { cache: "no-store" } тохиргоог нэмлээ
+    fetch(`/api/dishes?category_id=${id}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
-        setDishes(data);
-      });
+        setDishes(Array.isArray(data) ? data : []);
+      })
+      .catch(() => setDishes([]));
 
-    fetch("/api/categories")
+    fetch("/api/categories", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         const cat = data.find((c: any) => c.id === Number(id));
@@ -50,55 +57,62 @@ export default function CategoryPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {dishes.map((dish) => (
-            <div
-              key={dish.id}
-              className="bg-white rounded-4xl p-4 shadow-sm hover:shadow-xl transition-all group cursor-pointer border border-gray-100"
-              onClick={() => setSelected(dish)}
-            >
-              <div className="relative h-48 w-full rounded-3xl overflow-hidden mb-4">
-                <img
-                  src={dish.image_url || "/images/placeholder.png"}
-                  alt={dish.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+        {dishes.length === 0 ? (
+          <div className="text-center py-20 text-gray-400 text-sm">
+            Энэ ангилалд одоогоор хоол байхгүй байна.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {dishes.map((dish) => (
+              <div
+                key={dish.id}
+                className="bg-white rounded-4xl p-4 shadow-sm hover:shadow-xl transition-all group cursor-pointer border border-gray-100"
+                onClick={() => setSelected(dish)}
+              >
+                <div className="relative h-48 w-full rounded-3xl overflow-hidden mb-4">
+                  <img
+                    src={dish.image_url || "/images/placeholder.png"}
+                    alt={dish.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addToCart({
-                      id: dish.id,
-                      name: dish.name,
-                      price: Number(dish.price),
-                      image_url: dish.image_url,
-                    });
-                  }}
-                  className="absolute bottom-3 right-3 bg-[#634832] w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
-                >
-                  <span className="text-white text-2xl font-bold">+</span>
-                </button>
-              </div>
-
-              <div className="px-1">
-                <h3 className="text-[#2A1C0F] font-bold text-lg mb-1 group-hover:text-[#8B5E34] transition-colors">
-                  {dish.name}
-                </h3>
-                <div className="flex justify-between items-center">
-                  <span className="font-black text-[#8B5E34] text-xl">
-                    ₮{Number(dish.price).toLocaleString()}
-                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart({
+                        id: dish.id,
+                        name: dish.name,
+                        price: Number(dish.price),
+                        image_url: dish.image_url,
+                      });
+                    }}
+                    className="absolute bottom-3 right-3 bg-[#634832] w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
+                  >
+                    <span className="text-white text-2xl font-bold">+</span>
+                  </button>
                 </div>
-                <p className="text-gray-400 text-[10px] mt-2 line-clamp-2">
-                  {dish.description ||
-                    "Монгол уламжлалт жороор бэлтгэсэн амттай хоол."}
-                </p>
+
+                <div className="px-1">
+                  <h3 className="text-[#2A1C0F] font-bold text-lg mb-1 group-hover:text-[#8B5E34] transition-colors">
+                    {dish.name}
+                  </h3>
+                  <div className="flex justify-between items-center">
+                    <span className="font-black text-[#8B5E34] text-xl">
+                      ₮{Number(dish.price).toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="text-gray-400 text-[10px] mt-2 line-clamp-2">
+                    {dish.description ||
+                      "Монгол уламжлалт жороор бэлтгэсэн амттай хоол."}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
+      {/* Шинэчлэгдсэн selected (найрлагатай) датаг Sheet рүү дамжуулна */}
       <FoodDetailSheet dish={selected} onClose={() => setSelected(null)} />
     </div>
   );

@@ -1,31 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 type Category = { id: number; name: string };
 
-export default function Cat() {
-  const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: "БҮГД" },
-    { id: 2, name: "ХАЛУУН ХООЛ" },
-    { id: 3, name: "ШӨЛ" },
-    { id: 4, name: "ХҮЙТЭН ХООЛ" },
-    { id: 5, name: "УНДАА" },
-  ]);
+interface CatProps {
+  activeCategory: number;
+  onCategoryChange: (id: number) => void;
+}
 
-  const [active, setActive] = useState<number>(1);
-  const router = useRouter();
+export default function Cat({ activeCategory, onCategoryChange }: CatProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleCategoryClick = (id: number) => {
-    setActive(id);
-
-    if (id === 1) {
-      router.push("/");
-    } else {
-      router.push(`/category/${id}`);
-    }
-  };
+  useEffect(() => {
+    fetch("/api/categories", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategories([{ id: 1, name: "БҮГД" }, ...data]);
+        } else {
+          setCategories([{ id: 1, name: "БҮГД" }]);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch categories:", err);
+        setCategories([{ id: 1, name: "БҮГД" }]);
+      });
+  }, []);
 
   return (
     <div className="py-10">
@@ -37,9 +38,9 @@ export default function Cat() {
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => handleCategoryClick(cat.id)}
+            onClick={() => onCategoryChange(cat.id)}
             className={`px-6 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${
-              active === cat.id
+              activeCategory === cat.id
                 ? "bg-[#634832] text-white shadow-md"
                 : "bg-transparent text-[#8B5E34] hover:bg-[#8B5E34]/10"
             }`}

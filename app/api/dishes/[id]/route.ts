@@ -8,7 +8,7 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const { name, description, price, image_url, category_id } =
+    const { name, description, ingredients, price, image_url, category_id } =
       await req.json();
 
     if (!name || !price) {
@@ -22,6 +22,7 @@ export async function PATCH(
       UPDATE dishes 
       SET 
         name = ${name}, 
+        ingredients = ${ingredients ? JSON.stringify(ingredients) : null},
         description = ${description}, 
         price = ${parseFloat(price)}, 
         image_url = ${image_url}, 

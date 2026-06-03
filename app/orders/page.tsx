@@ -207,7 +207,7 @@ export default function OrdersPage() {
 
           {/* Hero слайд */}
           <button
-            onClick={() => router.push("/admin?tab=hero")}
+            onClick={() => router.push("/admin/hero")}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors hover:bg-white/10"
             style={{ color: "#c9a97a" }}
           >

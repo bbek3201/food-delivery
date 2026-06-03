@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-import { useState, useEffect } from "react"; // useEffect нэмсэн
+import { useState, useEffect } from "react";
 import { addToCart } from "@/lib/cart";
 
 type Dish = {
@@ -11,6 +11,7 @@ type Dish = {
   price: number;
   image_url: string;
   description: string;
+  ingredients?: string[];
 };
 
 type Props = {
@@ -20,11 +21,12 @@ type Props = {
 
 export default function FoodDetailSheet({ dish, onClose }: Props) {
   const [qty, setQty] = useState(1);
+  const [activeTab, setActiveTab] = useState<
+    "info" | "ingredient" | "delivery"
+  >("info");
 
   useEffect(() => {
-    if (dish) {
-      setQty(1);
-    }
+    if (dish) setQty(1);
   }, [dish?.id]);
 
   if (!dish) return null;
@@ -52,17 +54,18 @@ export default function FoodDetailSheet({ dish, onClose }: Props) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
       style={{
-        backgroundColor: "rgba(0,0,0,0.55)",
+        backgroundColor: "rgba(44,26,14,0.6)",
         backdropFilter: "blur(6px)",
       }}
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl overflow-hidden flex shadow-2xl"
-        style={{ width: 640, maxWidth: "95vw", height: 340 }}
+        className="rounded-3xl overflow-hidden flex shadow-2xl"
+        style={{ width: 680, maxWidth: "95vw", backgroundColor: "#fff8f2" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative shrink-0" style={{ width: 260 }}>
+        {/* Left image */}
+        <div className="relative shrink-0" style={{ width: 280 }}>
           <img
             src={dish.image_url}
             alt={dish.name}
@@ -70,59 +73,160 @@ export default function FoodDetailSheet({ dish, onClose }: Props) {
           />
         </div>
 
+        {/* Right content */}
         <div className="flex-1 flex flex-col px-7 py-6 relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors text-base font-bold leading-none"
+            className="absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center text-base font-bold"
+            style={{ backgroundColor: "#e8ddd4", color: "#8a6a4a" }}
           >
             ×
           </button>
 
-          <h2 className="text-xl font-bold text-[#E74C3C] pr-8 leading-snug">
+          <h2
+            className="text-xl font-bold pr-8 leading-snug"
+            style={{ color: "#2c1a0e" }}
+          >
             {dish.name}
           </h2>
+          <p
+            className="text-2xl font-extrabold mt-1"
+            style={{ color: "#c9a97a" }}
+          >
+            ₮{(Number(dish.price) * qty).toLocaleString()}
+          </p>
 
-          <p className="text-gray-400 text-sm mt-2 leading-relaxed line-clamp-3">
+          <p
+            className="text-sm mt-2 leading-relaxed line-clamp-2"
+            style={{ color: "#8a6a4a" }}
+          >
             {dish.description}
           </p>
 
-          <div className="flex-1" />
-
-          <div className="flex items-end justify-between mb-4">
-            <div>
-              <p className="text-xs text-gray-400 mb-0.5">Total price</p>
-              <p className="text-2xl font-extrabold text-gray-900">
-                ${(Number(dish.price) * qty).toFixed(2)}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
+          {/* Qty + Add button */}
+          <div className="flex items-center gap-3 mt-4">
+            <div
+              className="flex items-center gap-2 rounded-xl px-3 py-2"
+              style={{ backgroundColor: "#e8ddd4" }}
+            >
               <button
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="w-7 h-7 flex items-center justify-center text-[#E74C3C] hover:opacity-70 transition-opacity"
-                style={{ fontSize: 20 }}
+                className="w-6 h-6 flex items-center justify-center font-bold text-lg"
+                style={{ color: "#2c1a0e" }}
               >
-                ‹
+                −
               </button>
-              <span className="font-bold text-base w-5 text-center text-gray-900">
+              <span
+                className="font-bold text-sm w-5 text-center"
+                style={{ color: "#2c1a0e" }}
+              >
                 {qty}
               </span>
               <button
                 onClick={() => setQty((q) => q + 1)}
-                className="w-7 h-7 flex items-center justify-center text-[#E74C3C] hover:opacity-70 transition-opacity"
-                style={{ fontSize: 20 }}
+                className="w-6 h-6 flex items-center justify-center font-bold text-lg"
+                style={{ color: "#2c1a0e" }}
               >
-                ›
+                +
               </button>
+            </div>
+            <button
+              onClick={handleAdd}
+              className="flex-1 py-2.5 rounded-xl font-bold text-sm tracking-widest uppercase transition-all"
+              style={{ backgroundColor: "#2c1a0e", color: "#f5f0eb" }}
+            >
+              Сагсанд нэмэх
+            </button>
+          </div>
+
+          {/* Features */}
+          <div className="flex gap-4 mt-4">
+            <div
+              className="flex items-center gap-1.5 text-xs"
+              style={{ color: "#8a6a4a" }}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              Эрүүл орц
+            </div>
+            <div
+              className="flex items-center gap-1.5 text-xs"
+              style={{ color: "#8a6a4a" }}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              Шуурхай хүргэлт
             </div>
           </div>
 
-          <button
-            onClick={handleAdd}
-            className="w-full bg-gray-900 hover:bg-gray-700 active:scale-[0.98] text-white py-3 rounded-2xl font-bold text-sm tracking-wide transition-all"
+          {/* Tabs */}
+          <div
+            className="flex gap-0 mt-5"
+            style={{ borderBottom: "2px solid #e8ddd4" }}
           >
-            Add to cart
-          </button>
+            {[
+              { key: "info", label: "Тайлбар" },
+              { key: "ingredient", label: "Найрлага" },
+              { key: "delivery", label: "Хүргэлт" },
+            ].map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setActiveTab(t.key as typeof activeTab)}
+                className="px-4 py-2 text-xs font-bold transition-colors"
+                style={{
+                  color: activeTab === t.key ? "#2c1a0e" : "#8a6a4a",
+                  borderBottom:
+                    activeTab === t.key
+                      ? "2px solid #2c1a0e"
+                      : "2px solid transparent",
+                  marginBottom: -2,
+                }}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          <div
+            className="mt-3 text-xs leading-relaxed"
+            style={{ color: "#8a6a4a" }}
+          >
+            {activeTab === "info" && (
+              <p>{dish.description || "Мэдээлэл байхгүй."}</p>
+            )}
+            {/* Хэрэв идэвхтэй таб нь "Найрлага" байвал */}
+            {activeTab === "ingredient" && (
+              <p className="text-sm" style={{ color: "#8a6a4a" }}>
+                {/* Сонгогдсон хоолонд найрлага байвал харуулна, байхгүй бол анхааруулна */}
+                {dish.ingredients || "Найрлагын мэдээлэл оруулаагүй байна."}
+              </p>
+            )}
+            {activeTab === "delivery" && (
+              <p>Захиалгаас хойш 30–60 минутын дотор хүргэнэ.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

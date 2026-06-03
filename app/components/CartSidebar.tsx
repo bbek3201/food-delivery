@@ -14,6 +14,36 @@ type MyOrder = {
 };
 type Props = { open: boolean; onClose: () => void };
 
+const STATUS_MAP: Record<
+  string,
+  { label: string; style: React.CSSProperties }
+> = {
+  PENDING: {
+    label: "Хүлээгдэж байна",
+    style: {
+      backgroundColor: "#fffbeb",
+      color: "#d97706",
+      border: "1px solid #f59e0b",
+    },
+  },
+  DELIVERED: {
+    label: "Хүргэгдсэн",
+    style: {
+      backgroundColor: "#ecfdf5",
+      color: "#059669",
+      border: "1px solid #10b981",
+    },
+  },
+  CANCELLED: {
+    label: "Цуцлагдсан",
+    style: {
+      backgroundColor: "#f9fafb",
+      color: "#6b7280",
+      border: "1px solid #d1d5db",
+    },
+  },
+};
+
 export default function CartSidebar({ open, onClose }: Props) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [tab, setTab] = useState<"cart" | "order">("cart");
@@ -25,7 +55,6 @@ export default function CartSidebar({ open, onClose }: Props) {
   const [myOrders, setMyOrders] = useState<MyOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!open) return;
     setItems(getCart());
@@ -110,24 +139,28 @@ export default function CartSidebar({ open, onClose }: Props) {
     setSuccess(true);
   };
 
-  const statusStyle = (s: string) =>
-    s === "PENDING"
-      ? "bg-orange-100 text-orange-500"
-      : s === "DELIVERED"
-        ? "bg-green-100 text-green-600"
-        : "bg-gray-100 text-gray-500";
-
   if (!open) return null;
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />
-      <div className="fixed top-0 right-0 h-full w-[400px] bg-white z-50 shadow-2xl flex flex-col">
+      <div
+        className="fixed inset-0 z-40"
+        style={{ backgroundColor: "rgba(44,26,14,0.4)" }}
+        onClick={onClose}
+      />
+      <div
+        className="fixed top-0 right-0 h-full w-[420px] z-50 shadow-2xl flex flex-col"
+        style={{ backgroundColor: "#fff8f2" }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div
+          className="flex items-center justify-between px-6 py-4"
+          style={{ borderBottom: "1px solid #e8ddd4" }}
+        >
           <div className="flex items-center gap-2">
             <svg
-              className="w-5 h-5 text-gray-700"
+              className="w-5 h-5"
+              style={{ color: "#2c1a0e" }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -139,29 +172,45 @@ export default function CartSidebar({ open, onClose }: Props) {
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <span className="font-bold text-gray-900">Order detail</span>
+            <span className="font-bold text-base" style={{ color: "#2c1a0e" }}>
+              Захиалга
+            </span>
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-lg"
+            style={{ backgroundColor: "#e8ddd4", color: "#2c1a0e" }}
           >
             ×
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex mx-6 mt-4 rounded-xl overflow-hidden border border-gray-100">
+        <div
+          className="flex mx-6 mt-4 rounded-xl overflow-hidden"
+          style={{ border: "1px solid #e8ddd4" }}
+        >
           <button
             onClick={() => handleTabChange("cart")}
-            className={`flex-1 py-2.5 text-sm font-bold transition-colors ${tab === "cart" ? "bg-red-500 text-white" : "text-gray-500 hover:bg-gray-50"}`}
+            className="flex-1 py-2.5 text-sm font-bold transition-colors"
+            style={
+              tab === "cart"
+                ? { backgroundColor: "#2c1a0e", color: "#f5f0eb" }
+                : { color: "#8a6a4a", backgroundColor: "transparent" }
+            }
           >
-            Cart
+            Сагс
           </button>
           <button
             onClick={() => handleTabChange("order")}
-            className={`flex-1 py-2.5 text-sm font-bold transition-colors ${tab === "order" ? "bg-red-500 text-white" : "text-gray-500 hover:bg-gray-50"}`}
+            className="flex-1 py-2.5 text-sm font-bold transition-colors"
+            style={
+              tab === "order"
+                ? { backgroundColor: "#2c1a0e", color: "#f5f0eb" }
+                : { color: "#8a6a4a", backgroundColor: "transparent" }
+            }
           >
-            Order
+            Захиалга
           </button>
         </div>
 
@@ -170,10 +219,19 @@ export default function CartSidebar({ open, onClose }: Props) {
           {tab === "order" &&
             (ordersLoading ? (
               <div className="flex justify-center py-10">
-                <div className="animate-spin w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full" />
+                <div
+                  className="animate-spin w-6 h-6 border-2 border-t-transparent rounded-full"
+                  style={{
+                    borderColor: "#c9a97a",
+                    borderTopColor: "transparent",
+                  }}
+                />
               </div>
             ) : myOrders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-40 text-gray-400">
+              <div
+                className="flex flex-col items-center justify-center h-40"
+                style={{ color: "#8a6a4a" }}
+              >
                 <p className="text-sm">Захиалга байхгүй байна</p>
               </div>
             ) : (
@@ -181,16 +239,24 @@ export default function CartSidebar({ open, onClose }: Props) {
                 {myOrders.map((order) => (
                   <div
                     key={order.id}
-                    className="border border-gray-100 rounded-2xl p-4 space-y-3"
+                    className="rounded-2xl p-4 space-y-3"
+                    style={{
+                      border: "1px solid #e8ddd4",
+                      backgroundColor: "#fff",
+                    }}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-400">
-                        {new Date(order.created_at).toLocaleDateString()}
+                      <span className="text-xs" style={{ color: "#8a6a4a" }}>
+                        {new Date(order.created_at).toLocaleDateString("mn-MN")}
                       </span>
                       <span
-                        className={`text-xs font-bold px-2 py-1 rounded-full ${statusStyle(order.status)}`}
+                        className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                        style={
+                          STATUS_MAP[order.status]?.style ||
+                          STATUS_MAP.PENDING.style
+                        }
                       >
-                        {order.status}
+                        {STATUS_MAP[order.status]?.label || order.status}
                       </span>
                     </div>
                     <div className="space-y-2">
@@ -201,18 +267,32 @@ export default function CartSidebar({ open, onClose }: Props) {
                             alt={item.name}
                             className="w-8 h-8 rounded-lg object-cover"
                           />
-                          <span className="text-xs text-gray-700 flex-1">
+                          <span
+                            className="text-xs flex-1"
+                            style={{ color: "#2c1a0e" }}
+                          >
                             {item.name}
                           </span>
-                          <span className="text-xs text-gray-400">
+                          <span
+                            className="text-xs"
+                            style={{ color: "#8a6a4a" }}
+                          >
                             x{item.quantity}
                           </span>
                         </div>
                       ))}
                     </div>
-                    <div className="flex justify-between border-t border-gray-50 pt-2">
-                      <span className="text-xs text-gray-400">Нийт</span>
-                      <span className="text-sm font-bold text-gray-900">
+                    <div
+                      className="flex justify-between pt-2"
+                      style={{ borderTop: "1px dashed #e8ddd4" }}
+                    >
+                      <span className="text-xs" style={{ color: "#8a6a4a" }}>
+                        Нийт
+                      </span>
+                      <span
+                        className="text-sm font-bold"
+                        style={{ color: "#c9a97a" }}
+                      >
                         ₮{Number(order.total_price).toLocaleString()}
                       </span>
                     </div>
@@ -224,10 +304,14 @@ export default function CartSidebar({ open, onClose }: Props) {
           {/* CART TAB */}
           {tab === "cart" &&
             (success ? (
-              <div className="flex flex-col items-center justify-center h-full gap-4">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center h-full gap-4 py-10">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "#ecfdf5" }}
+                >
                   <svg
-                    className="w-8 h-8 text-green-500"
+                    className="w-8 h-8"
+                    style={{ color: "#059669" }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -240,13 +324,19 @@ export default function CartSidebar({ open, onClose }: Props) {
                     />
                   </svg>
                 </div>
-                <p className="font-bold text-gray-900">Захиалга амжилттай!</p>
+                <p className="font-bold text-lg" style={{ color: "#2c1a0e" }}>
+                  Захиалга амжилттай!
+                </p>
+                <p className="text-sm text-center" style={{ color: "#8a6a4a" }}>
+                  Таны захиалгыг хүлээн авлаа
+                </p>
                 <button
                   onClick={() => {
                     setSuccess(false);
                     handleTabChange("order");
                   }}
-                  className="text-sm text-red-500 font-bold underline"
+                  className="text-sm font-bold underline"
+                  style={{ color: "#c9a97a" }}
                 >
                   Захиалга харах
                 </button>
@@ -255,23 +345,33 @@ export default function CartSidebar({ open, onClose }: Props) {
                     setSuccess(false);
                     onClose();
                   }}
-                  className="text-sm text-gray-400 underline"
+                  className="text-sm underline"
+                  style={{ color: "#8a6a4a" }}
                 >
                   Хаах
                 </button>
               </div>
             ) : items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-40 text-gray-400">
+              <div
+                className="flex flex-col items-center justify-center h-40"
+                style={{ color: "#8a6a4a" }}
+              >
                 <p className="text-sm">Сагс хоосон байна</p>
               </div>
             ) : (
               <>
-                <p className="font-bold text-gray-900 text-sm">My cart</p>
+                <p className="font-bold text-sm" style={{ color: "#2c1a0e" }}>
+                  Миний сагс
+                </p>
                 <div className="space-y-3">
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className="flex gap-3 p-3 border border-dashed border-gray-200 rounded-2xl"
+                      className="flex gap-3 p-3 rounded-2xl"
+                      style={{
+                        border: "1px dashed #e8ddd4",
+                        backgroundColor: "#fff",
+                      }}
                     >
                       <img
                         src={item.image_url || "/images/placeholder.png"}
@@ -280,12 +380,19 @@ export default function CartSidebar({ open, onClose }: Props) {
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
-                          <p className="font-bold text-red-500 text-sm leading-tight">
+                          <p
+                            className="font-bold text-sm leading-tight"
+                            style={{ color: "#2c1a0e" }}
+                          >
                             {item.name}
                           </p>
                           <button
                             onClick={() => remove(item.id)}
-                            className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center text-red-500 shrink-0 ml-1"
+                            className="w-5 h-5 rounded-full flex items-center justify-center text-sm shrink-0 ml-1"
+                            style={{
+                              backgroundColor: "#e8ddd4",
+                              color: "#8a6a4a",
+                            }}
                           >
                             ×
                           </button>
@@ -294,21 +401,35 @@ export default function CartSidebar({ open, onClose }: Props) {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => updateQty(item.id, -1)}
-                              className="w-6 h-6 flex items-center justify-center text-red-500 text-lg font-bold"
+                              className="w-7 h-7 rounded-full flex items-center justify-center text-lg font-bold"
+                              style={{
+                                backgroundColor: "#e8ddd4",
+                                color: "#2c1a0e",
+                              }}
                             >
                               −
                             </button>
-                            <span className="text-sm font-bold w-4 text-center">
+                            <span
+                              className="text-sm font-bold w-5 text-center"
+                              style={{ color: "#2c1a0e" }}
+                            >
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQty(item.id, 1)}
-                              className="w-6 h-6 flex items-center justify-center text-red-500 text-lg font-bold"
+                              className="w-7 h-7 rounded-full flex items-center justify-center text-lg font-bold"
+                              style={{
+                                backgroundColor: "#2c1a0e",
+                                color: "#f5f0eb",
+                              }}
                             >
                               +
                             </button>
                           </div>
-                          <span className="font-bold text-gray-900 text-sm">
+                          <span
+                            className="font-bold text-sm"
+                            style={{ color: "#c9a97a" }}
+                          >
                             ₮{(item.price * item.quantity).toLocaleString()}
                           </span>
                         </div>
@@ -317,9 +438,13 @@ export default function CartSidebar({ open, onClose }: Props) {
                   ))}
                 </div>
 
+                {/* Address */}
                 <div>
-                  <p className="font-bold text-gray-900 text-sm mb-2">
-                    Delivery location
+                  <p
+                    className="font-bold text-sm mb-2"
+                    style={{ color: "#2c1a0e" }}
+                  >
+                    Хүргэлтийн хаяг
                   </p>
                   <div className="relative">
                     <input
@@ -332,10 +457,21 @@ export default function CartSidebar({ open, onClose }: Props) {
                         suggestions.length > 0 && setShowSuggestions(true)
                       }
                       placeholder="Хаяг хайх... (жишээ: Сүхбаатар дүүрэг)"
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-gray-400 text-gray-600 placeholder:text-gray-300"
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none"
+                      style={{
+                        border: "1px solid #e8ddd4",
+                        backgroundColor: "#fff",
+                        color: "#2c1a0e",
+                      }}
                     />
                     {showSuggestions && suggestions.length > 0 && (
-                      <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1 overflow-hidden">
+                      <div
+                        className="absolute z-10 w-full rounded-xl shadow-lg mt-1 overflow-hidden"
+                        style={{
+                          backgroundColor: "#fff",
+                          border: "1px solid #e8ddd4",
+                        }}
+                      >
                         {suggestions.map((s, i) => (
                           <button
                             key={i}
@@ -343,7 +479,11 @@ export default function CartSidebar({ open, onClose }: Props) {
                               setAddress(s);
                               setShowSuggestions(false);
                             }}
-                            className="w-full text-left px-4 py-2.5 text-xs text-gray-700 hover:bg-gray-50 border-b border-gray-50 last:border-0"
+                            className="w-full text-left px-4 py-2.5 text-xs hover:bg-amber-50 last:border-0"
+                            style={{
+                              color: "#2c1a0e",
+                              borderBottom: "1px solid #f0e8df",
+                            }}
                           >
                             {s}
                           </button>
@@ -353,23 +493,35 @@ export default function CartSidebar({ open, onClose }: Props) {
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-2xl p-4 space-y-2">
-                  <p className="font-bold text-gray-900 text-sm mb-3">
-                    Payment info
+                {/* Payment summary */}
+                <div
+                  className="rounded-2xl p-4 space-y-2"
+                  style={{ backgroundColor: "#f5f0eb" }}
+                >
+                  <p
+                    className="font-bold text-sm mb-3"
+                    style={{ color: "#2c1a0e" }}
+                  >
+                    Захиалга
                   </p>
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Items</span>
-                    <span>₮{subtotal.toLocaleString()}</span>
-                  </div>
-                  <div className="border-t border-dashed border-gray-200 my-2" />
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Shipping</span>
-                    <span>₮{shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="border-t border-dashed border-gray-200 my-2" />
-                  <div className="flex justify-between font-bold text-gray-900">
-                    <span>Total</span>
-                    <span>₮{total.toLocaleString()}</span>
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between text-sm">
+                      <span style={{ color: "#8a6a4a" }}>
+                        {item.name} x{item.quantity}
+                      </span>
+                      <span style={{ color: "#2c1a0e" }}>
+                        ₮{(item.price * item.quantity).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                  <div
+                    style={{ borderTop: "1px dashed #e8ddd4", margin: "8px 0" }}
+                  />
+                  <div className="flex justify-between font-bold text-base">
+                    <span style={{ color: "#2c1a0e" }}>Нийт дүн</span>
+                    <span style={{ color: "#c9a97a" }}>
+                      ₮{subtotal.toLocaleString()}
+                    </span>
                   </div>
                 </div>
               </>
@@ -377,13 +529,14 @@ export default function CartSidebar({ open, onClose }: Props) {
         </div>
 
         {tab === "cart" && !success && items.length > 0 && (
-          <div className="px-6 pb-6">
+          <div className="px-6 pb-6 pt-2">
             <button
               onClick={handleCheckout}
               disabled={ordering}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-bold text-sm transition-colors disabled:opacity-50"
+              className="w-full py-4 rounded-2xl font-bold text-sm tracking-widest uppercase transition-colors disabled:opacity-50"
+              style={{ backgroundColor: "#2c1a0e", color: "#f5f0eb" }}
             >
-              {ordering ? "Захиалж байна..." : "Checkout"}
+              {ordering ? "Захиалж байна..." : "Захиалга илгээх"}
             </button>
           </div>
         )}
