@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useState, useEffect } from "react";
-import { FaFacebook as FbIcon, FaInstagram as InstaIcon } from "react-icons/fa";
+
 import { useRouter } from "next/navigation";
 
 type Category = { id: number; name: string };
@@ -48,16 +48,7 @@ export default function Footer() {
 
         <div className="flex gap-6">
           <span className="text-sm">Сошиал хаягууд:</span>
-          <div className="flex gap-4">
-            <FbIcon
-              size={24}
-              className="hover:text-[#8B5E34] cursor-pointer transition-colors"
-            />
-            <InstaIcon
-              size={24}
-              className="hover:text-[#8B5E34] cursor-pointer transition-colors"
-            />
-          </div>
+          <div className="flex gap-4"></div>
         </div>
 
         <div className="flex gap-4">
