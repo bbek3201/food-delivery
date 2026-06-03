@@ -1,15 +1,14 @@
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
-    domains: ["images.unsplash.com"],
-  },
-  async rewrites() {
-    return [
+    remotePatterns: [
       {
-        source: "/api/kfcsort/:path*",
-        destination:
-          "https://z4ryw4kny0.execute-api.ap-southeast-1.amazonaws.com/production/:path*",
+        protocol: "https",
+        hostname: "**", // Бүх төрлийн гадны линкнээс зураг уншихыг зөвшөөрөх (Хамгийн амархан)
       },
-    ];
+    ],
   },
 };
+
 export default nextConfig;
