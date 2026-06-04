@@ -90,7 +90,7 @@ export default function SignInPage() {
               setEmail(e.target.value);
               validateEmail(e.target.value);
             }}
-            className={`w-full bg-white border-[1.5px] rounded-xl px-4 py-3 outline-none ${emailError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
+            className={`w-full bg-white text-black border-[1.5px] rounded-xl px-4 py-3 outline-none ${emailError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
           />
           {emailError && (
             <p className="text-[#C0392B] text-xs mt-1">⚠️ {emailError}</p>
@@ -107,7 +107,7 @@ export default function SignInPage() {
               setPassword(e.target.value);
               validatePassword(e.target.value);
             }}
-            className={`w-full bg-white border-[1.5px] rounded-xl px-4 py-3 outline-none ${passwordError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
+            className={`w-full bg-white text-black border-[1.5px] rounded-xl px-4 py-3 outline-none ${passwordError ? "border-[#C0392B] text-black" : "border-[#D4BFA0] text-black"}`}
           />
           {passwordError && (
             <p className="text-[#C0392B] text-xs mt-1">⚠️ {passwordError}</p>
@@ -142,7 +142,7 @@ export default function SignInPage() {
         <button
           onClick={handleSubmit}
           disabled={loading || !isFormValid}
-          className={`w-full py-3.5 rounded-xl font-bold text-sm ${isFormValid ? "bg-[#8B5E34] text-[#F5EFE6]" : "bg-[#D4BFA0] text-gray-500"}`}
+          className={`w-full py-3.5 rounded-xl font-bold text-sm ${isFormValid ? "bg-[#8B5E34] text-black" : "bg-[#D4BFA0] text-black/50 cursor-not-allowed"} transition`}
         >
           {loading ? "Уншиж байна..." : "Нэвтрэх →"}
         </button>
