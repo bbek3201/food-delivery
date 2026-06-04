@@ -43,7 +43,6 @@ export default function SignInPage() {
     validateEmail(email);
     validatePassword(password);
     if (!isFormValid) return;
-
     setLoading(true);
     setError("");
     const res = await fetch("/api/auth/sign-in", {
@@ -53,7 +52,6 @@ export default function SignInPage() {
     });
     const data = await res.json();
     setLoading(false);
-
     if (res.ok) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -62,6 +60,9 @@ export default function SignInPage() {
       setError(data.error || "Нэвтрэхэд алдаа гарлаа");
     }
   };
+
+  const inputBase =
+    "w-full bg-white border-[1.5px] rounded-xl px-4 py-3 outline-none text-[#3D2B1A] placeholder:text-[#C4A882]";
 
   return (
     <div className="flex h-screen font-sans">
@@ -73,9 +74,11 @@ export default function SignInPage() {
           ‹
         </button>
 
-        <h1 className="text-3xl font-bold text-[#3D2B1A] mb-2">
-          Тавтай морил 👋
-        </h1>
+        <img
+          src="/mainlogo.png"
+          alt="logo"
+          className="w-20 h-20 object-contain mb-4"
+        />
         <p className="text-sm text-[#7A5C3A] mb-8">
           Дансандаа нэвтэрч захиалгаа хийгээрэй.
         </p>
@@ -90,7 +93,7 @@ export default function SignInPage() {
               setEmail(e.target.value);
               validateEmail(e.target.value);
             }}
-            className={`w-full bg-white text-black border-[1.5px] rounded-xl px-4 py-3 outline-none ${emailError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
+            className={`${inputBase} ${emailError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
           />
           {emailError && (
             <p className="text-[#C0392B] text-xs mt-1">⚠️ {emailError}</p>
@@ -107,14 +110,13 @@ export default function SignInPage() {
               setPassword(e.target.value);
               validatePassword(e.target.value);
             }}
-            className={`w-full bg-white text-black border-[1.5px] rounded-xl px-4 py-3 outline-none ${passwordError ? "border-[#C0392B] text-black" : "border-[#D4BFA0] text-black"}`}
+            className={`${inputBase} ${passwordError ? "border-[#C0392B]" : "border-[#D4BFA0]"}`}
           />
           {passwordError && (
             <p className="text-[#C0392B] text-xs mt-1">⚠️ {passwordError}</p>
           )}
         </div>
 
-        {/* НЭМЭГДСЭН ХЭСЭГ: Нууц үг харуулах & Сэргээх линк */}
         <div className="flex items-center justify-between mb-6">
           <label className="flex items-center gap-2 text-xs text-[#7A5C3A] cursor-pointer">
             <input
@@ -142,13 +144,13 @@ export default function SignInPage() {
         <button
           onClick={handleSubmit}
           disabled={loading || !isFormValid}
-          className={`w-full py-3.5 rounded-xl font-bold text-sm ${isFormValid ? "bg-[#8B5E34] text-black" : "bg-[#D4BFA0] text-black/50 cursor-not-allowed"} transition`}
+          className={`w-full py-3.5 rounded-xl font-bold text-sm transition ${isFormValid ? "bg-[#8B5E34] text-white" : "bg-[#D4BFA0] text-white/60 cursor-not-allowed"}`}
         >
           {loading ? "Уншиж байна..." : "Нэвтрэх →"}
         </button>
 
         <p className="text-center mt-5 text-sm text-[#7A5C3A]">
-          Данс байхгүй юу?{" "}
+          Бүртгэл байхгүй юу?{" "}
           <a
             href="/sign-up"
             className="text-[#8B5E34] font-bold hover:underline"
