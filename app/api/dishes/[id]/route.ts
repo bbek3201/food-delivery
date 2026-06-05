@@ -8,8 +8,15 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const { name, description, ingredients, price, image_url, category_id } =
-      await req.json();
+    const {
+      name,
+      description,
+      ingredients,
+      price,
+      image_url,
+      category_id,
+      is_active,
+    } = await req.json();
 
     if (!name || !price) {
       return Response.json(
@@ -17,19 +24,19 @@ export async function PATCH(
         { status: 400 },
       );
     }
-
     const result = await sql`
-      UPDATE dishes 
-      SET 
-        name = ${name}, 
-        ingredients = ${ingredients ? JSON.stringify(ingredients) : null},
-        description = ${description}, 
-        price = ${parseFloat(price)}, 
-        image_url = ${image_url}, 
-        category_id = ${category_id ? parseInt(category_id) : null}
-      WHERE id = ${id}
-      RETURNING *;
-    `;
+  UPDATE dishes 
+  SET 
+    name = ${name}, 
+    ingredients = ${ingredients ? JSON.stringify(ingredients) : null},
+    description = ${description}, 
+    price = ${parseFloat(price)}, 
+    image_url = ${image_url}, 
+    category_id = ${category_id ? parseInt(category_id) : null},
+    is_active = ${is_active ?? true}
+  WHERE id = ${id}
+  RETURNING *;
+`;
 
     if (result.length === 0) {
       return Response.json({ error: "Dish not found" }, { status: 404 });

@@ -73,35 +73,17 @@ export default function Header() {
           >
             <img src="/mainlogo.png" alt="Logo" className="w-45 h-25 " />
           </div>
-          <div className="flex flex-col ">
+          <div className="flex flex-col leading-tight">
             <span className="text-[#634832] font-black text-4xl tracking-tight uppercase">
               Монгол
             </span>
-            <span className="text-[#8B5E34] text-2xs font-medium">
+            <span className="text-[#8B5E34] text-2xs font-medium pl-5">
               үндэсний хоол
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-6">
-          {/* Search */}
-          <button className="text-[#634832] hover:scale-110 transition-transform">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-
           {/* Cart */}
           <button
             onClick={() => setCartOpen(true)}

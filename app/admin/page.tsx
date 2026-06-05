@@ -14,6 +14,7 @@ type Dish = {
   image_url: string;
   category_id: number;
   category_name: string;
+  is_active: boolean; // 2. Идэвхтэй эсэх талбарыг нэмж өгнө
 };
 
 export default function FoodMenuPage() {
@@ -51,8 +52,8 @@ export default function FoodMenuPage() {
   useEffect(() => {
     setLoading(true);
     const url = activeCat
-      ? `/api/dishes?category_id=${activeCat}`
-      : "/api/dishes";
+      ? `/api/dishes?category_id=${activeCat}&admin=true`
+      : "/api/dishes?admin=true";
     fetch(url)
       .then(async (r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -203,12 +204,26 @@ export default function FoodMenuPage() {
         className="w-52 flex flex-col py-8 px-5 shrink-0"
         style={{ backgroundColor: "#2c1a0e", color: "#f5f0eb" }}
       >
-        <button onClick={() => router.push("/")} className="mb-10">
+        <button
+          onClick={() => router.push("/")}
+          className="mb-10 group relative"
+        >
           <img
             src="/mainlogo.png"
             alt="logo"
             className="w-16 h-16 object-contain mx-auto"
           />
+          <div
+            className="absolute inset-0 flex items-center justify-center rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{ backgroundColor: "rgba(201,169,122,0.15)" }}
+          >
+            <span
+              className="text-xs font-semibold"
+              style={{ color: "#c9a97a" }}
+            >
+              Нүүр хуудас
+            </span>
+          </div>
           <p
             className="text-center text-xs mt-2 font-bold tracking-widest"
             style={{ color: "#c9a97a" }}
@@ -256,6 +271,26 @@ export default function FoodMenuPage() {
               />
             </svg>
             Hero слайд
+          </button>
+          <button
+            onClick={() => router.push("/admin/tables")}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors hover:bg-white/10"
+            style={{ color: "#c9a97a" }}
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 10h18M3 6h18M3 14h18M3 18h18"
+              />
+            </svg>
+            Ширээ / QR
           </button>
           <button
             onClick={() => router.push("/orders")}
@@ -434,6 +469,19 @@ export default function FoodMenuPage() {
                           alt={dish.name}
                           className="w-full h-36 object-cover"
                         />
+                        {!dish.is_active && (
+                          <div
+                            className="absolute inset-0 flex items-center justify-center"
+                            style={{ backgroundColor: "rgba(44,26,14,0.6)" }}
+                          >
+                            <span
+                              className="text-xs font-bold text-white px-2 py-1 rounded-lg"
+                              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                            >
+                              Идэвхгүй хоол
+                            </span>
+                          </div>
+                        )}
                         <button
                           onClick={() => openEdit(dish)}
                           className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity"
@@ -471,6 +519,39 @@ export default function FoodMenuPage() {
                               d="M6 18L18 6M6 6l12 12"
                             />
                           </svg>
+                        </button>
+                        <button
+                          onClick={async () => {
+                            await fetch(`/api/dishes/${dish.id}`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                ...dish,
+                                is_active: !dish.is_active,
+                              }),
+                            });
+                            const url = activeCat
+                              ? `/api/dishes?category_id=${activeCat}&admin=true`
+                              : "/api/dishes?admin=true";
+                            fetch(url)
+                              .then((r) => r.json())
+                              .then(setDishes);
+                          }}
+                          className="absolute bottom-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                          title={
+                            dish.is_active
+                              ? "Идэвхгүй болгох"
+                              : "Идэвхтэй болгох"
+                          }
+                        >
+                          <span
+                            style={{
+                              fontSize: 14,
+                              color: dish.is_active ? "#22c55e" : "#dc2626",
+                            }}
+                          >
+                            {dish.is_active ? "✓" : "✗"}
+                          </span>
                         </button>
                       </div>
                       <div className="p-3">

@@ -1,6 +1,5 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
-import { nanoid } from "nanoid";
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -8,58 +7,60 @@ export async function GET() {
   try {
     const orders = await sql`
       SELECT 
-        fo.id, fo.user_id, u.email as customer_email,
-        fo.total_price, fo.status, fo.created_at,
-        u.address as delivery_address,
-        json_agg(json_build_object(
-          'name', d.name, 'quantity', foi.quantity, 'image_url', d.image_url
-        )) as items,
-        COUNT(foi.id) as item_count
+        fo.id, 
+        fo.total_price, 
+        fo.status, 
+        fo.created_at,
+        fo.customer_name,
+        fo.delivery_address,
+        fo.table_id,
+        rt.name AS table_name,
+        u.email AS customer_email,
+        COALESCE(json_agg(
+          json_build_object(
+            'name', d.name, 
+            'quantity', foi.quantity, 
+            'image_url', d.image_url
+          )
+        ) FILTER (WHERE d.id IS NOT NULL), '[]') AS items,
+        COUNT(foi.id)::int AS item_count
       FROM food_orders fo
-      LEFT JOIN users u ON fo.user_id = u.id
       LEFT JOIN food_order_items foi ON fo.id = foi.order_id
       LEFT JOIN dishes d ON foi.dish_id = d.id
-      GROUP BY fo.id, u.email, u.address
+      LEFT JOIN users u ON fo.user_id = u.id
+      LEFT JOIN restaurant_tables rt ON fo.table_id = rt.id
+      GROUP BY fo.id, u.email, rt.name
       ORDER BY fo.created_at DESC
     `;
     return NextResponse.json(orders);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Алдаа гарлаа" }, { status: 500 });
+    console.error("Database Error:", error);
+    return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const { user_id, items, total_price, address } = await req.json();
+    const body = await req.json();
+    const { items, total_price, customer_name, address } = body;
 
-    // user-ийн address шинэчилнэ
-    if (address && user_id) {
-      await sql`UPDATE users SET address = ${address} WHERE id = ${user_id}`;
-    }
-
-    // food_order үүсгэнэ
-    const orderId = nanoid();
-    await sql`
-      INSERT INTO food_orders (id, user_id, total_price, status)
-      VALUES (${orderId}, ${user_id}, ${total_price}, 'PENDING')
+    const [order] = await sql`
+      INSERT INTO food_orders (total_price, status, created_at, customer_name, delivery_address)
+      VALUES (${total_price}, 'PENDING', NOW(), ${customer_name ?? null}, ${address ?? null})
+      RETURNING id
     `;
 
-    // food_order_items нэмнэ
     for (const item of items) {
       await sql`
-        INSERT INTO food_order_items (id, order_id, dish_id, quantity, price)
-        VALUES (${nanoid()}, ${orderId}, ${item.id}, ${item.quantity}, ${item.price})
+        INSERT INTO food_order_items (order_id, dish_id, quantity)
+        VALUES (${order.id}, ${item.id}, ${item.quantity})
       `;
     }
 
-    return NextResponse.json({ success: true, order_id: orderId });
-  } catch (error) {
-    console.error("Order create error:", error);
-    return NextResponse.json(
-      { error: "Захиалга үүсгэхэд алдаа гарлаа" },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: true, order_id: order.id });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }
 

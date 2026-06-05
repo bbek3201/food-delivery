@@ -74,13 +74,8 @@ export default function SignInPage() {
           ‹
         </button>
 
-        <img
-          src="/mainlogo.png"
-          alt="logo"
-          className="w-20 h-20 object-contain mb-4"
-        />
         <p className="text-sm text-[#7A5C3A] mb-8">
-          Дансандаа нэвтэрч захиалгаа хийгээрэй.
+          Бүртгэлээ үүсгээд нэвтэрч захиалгаа хийгээрэй.
         </p>
 
         {/* Email */}

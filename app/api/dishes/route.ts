@@ -6,19 +6,21 @@ const sql = neon(process.env.DATABASE_URL!);
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const category_id = searchParams.get("category_id");
+  const isAdmin = searchParams.get("admin") === "true";
 
   const dishes = category_id
     ? await sql`
         SELECT d.*, c.name AS category_name
         FROM dishes d
         LEFT JOIN categories c ON c.id = d.category_id
-        WHERE d.category_id = ${category_id}
+        WHERE d.category_id = ${category_id} ${isAdmin ? sql`` : sql`AND d.is_active = true`}
         ORDER BY d.created_at DESC
       `
     : await sql`
         SELECT d.*, c.name AS category_name
         FROM dishes d
         LEFT JOIN categories c ON c.id = d.category_id
+        ${isAdmin ? sql`` : sql`WHERE d.is_active = true`}
         ORDER BY d.created_at DESC
       `;
 

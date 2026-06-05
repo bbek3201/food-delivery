@@ -120,6 +120,7 @@ export default function CartSidebar({ open, onClose }: Props) {
     setOrdering(true);
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
+
     await fetch("/api/orders", {
       method: "POST",
       headers: {
@@ -127,12 +128,13 @@ export default function CartSidebar({ open, onClose }: Props) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        user_id: user.id,
         items,
-        total_price: total,
+        total_price: subtotal,
+        customer_name: user.name || user.email || "Зочин",
         address,
       }),
     });
+
     localStorage.removeItem("cart");
     setItems([]);
     setOrdering(false);
@@ -149,7 +151,7 @@ export default function CartSidebar({ open, onClose }: Props) {
         onClick={onClose}
       />
       <div
-        className="fixed top-0 right-0 h-full w-[420px] z-50 shadow-2xl flex flex-col"
+        className="fixed top-0 right-0 h-full w-105 z-50 shadow-2xl flex flex-col"
         style={{ backgroundColor: "#fff8f2" }}
       >
         {/* Header */}

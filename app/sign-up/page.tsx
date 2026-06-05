@@ -94,28 +94,16 @@ export default function SignUpPage() {
           ‹
         </button>
 
-        <div className="flex items-center gap-3 mb-8">
-          <img
-            src="/mainlogo.png"
-            alt="logo"
-            className="w-20 h-20 object-contain mb-6"
-          />
-          <div className="leading-tight">
-            <p className="text-sm font-bold text-[#3D2B1A] tracking-wide">
-              МОНГОЛ ХООЛ
-            </p>
-            <p className="text-[10px] text-[#8B5E34] tracking-wider">
-              ҮНДЭСНИЙ ХООЛ
+        <div className="flex items-center gap-3 h-30  ">
+          <div>
+            <h1 className="text-3xl font-bold text-[#3D2B1A] mb-2">
+              Бүртгэл үүсгэх
+            </h1>
+            <p className="text-sm text-[#7A5C3A] mb-8 leading-relaxed">
+              Монгол үндэсний хоолыг захиалах бүртгэлээ үүсгээрэй.
             </p>
           </div>
         </div>
-
-        <h1 className="text-3xl font-bold text-[#3D2B1A] mb-2">
-          Бүртгэл үүсгэх
-        </h1>
-        <p className="text-sm text-[#7A5C3A] mb-8 leading-relaxed">
-          Монгол үндэсний хоолыг захиалах дансаа үүсгээрэй.
-        </p>
 
         {/* И-мэйл */}
         <div className="mb-4">

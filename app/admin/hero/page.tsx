@@ -140,6 +140,26 @@ export default function HeroSlidePage() {
             Hero слайд
           </button>
           <button
+            onClick={() => router.push("/admin/tables")}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors hover:bg-white/10"
+            style={{ color: "#c9a97a" }}
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 10h18M3 6h18M3 14h18M3 18h18"
+              />
+            </svg>
+            Ширээ / QR
+          </button>
+          <button
             onClick={() => router.push("/orders")}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors hover:bg-white/10"
             style={{ color: "#c9a97a" }}
