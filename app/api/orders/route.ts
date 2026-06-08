@@ -42,13 +42,13 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { items, total_price, customer_name, address } = body;
+    const { items, total_price, customer_name, address, user_id } = body;
 
     const [order] = await sql`
-      INSERT INTO food_orders (total_price, status, created_at, customer_name, delivery_address)
-      VALUES (${total_price}, 'PENDING', NOW(), ${customer_name ?? null}, ${address ?? null})
-      RETURNING id
-    `;
+  INSERT INTO food_orders (total_price, status, created_at, customer_name, delivery_address, user_id)
+  VALUES (${total_price}, 'PENDING', NOW(), ${customer_name ?? null}, ${address ?? null}, ${user_id ?? null})
+  RETURNING id
+`;
 
     for (const item of items) {
       await sql`

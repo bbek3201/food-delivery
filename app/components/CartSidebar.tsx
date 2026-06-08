@@ -132,6 +132,7 @@ export default function CartSidebar({ open, onClose }: Props) {
         total_price: subtotal,
         customer_name: user.name || user.email || "Зочин",
         address,
+        user_id: user.id, // ← энийг нэм
       }),
     });
 

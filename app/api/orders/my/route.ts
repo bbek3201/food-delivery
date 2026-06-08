@@ -3,8 +3,15 @@ import { NextResponse } from "next/server";
 
 const sql = neon(process.env.DATABASE_URL!);
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("user_id");
+
+    if (!userId) {
+      return NextResponse.json({ error: "user_id required" }, { status: 400 });
+    }
+
     const orders = await sql`
       SELECT 
         fo.id, 
@@ -29,6 +36,7 @@ export async function GET() {
       LEFT JOIN dishes d ON foi.dish_id = d.id
       LEFT JOIN users u ON fo.user_id = u.id
       LEFT JOIN restaurant_tables rt ON fo.table_id = rt.id
+      WHERE fo.user_id = ${userId}
       GROUP BY fo.id, u.email, rt.name
       ORDER BY fo.created_at DESC
     `;
